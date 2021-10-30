@@ -28,5 +28,12 @@ public class StringConvTest {
             assertEquals(8, strConv.strToInt("8"));
             assertEquals(3, strConv.strToInt("3"));
         }
+
+        @Test
+        void testMultipleDigits() {
+            assertEquals(11, strConv.strToInt("11"));
+            assertEquals(3771, strConv.strToInt("3771"));
+            assertEquals(919929999, strConv.strToInt("919929999"));
+        }
     }
 }
