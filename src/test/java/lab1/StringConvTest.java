@@ -35,5 +35,10 @@ public class StringConvTest {
             assertEquals(3771, strConv.strToInt("3771"));
             assertEquals(919929999, strConv.strToInt("919929999"));
         }
+
+        @Test
+        void invalidInput() {
+            assertEquals(12, strConv.strToInt("   "));
+        }
     }
 }
