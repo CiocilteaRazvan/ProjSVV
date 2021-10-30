@@ -43,6 +43,7 @@ public class StringConvTest {
             assertThrows(NumberFormatException.class, () -> strConv.strToInt("123,5"));
             assertThrows(NumberFormatException.class, () -> strConv.strToInt(null));
             assertThrows(NumberFormatException.class, () -> strConv.strToInt("123alpha"));
+            assertThrows(NumberFormatException.class, () -> strConv.strToInt(""));
         }
     }
 }
