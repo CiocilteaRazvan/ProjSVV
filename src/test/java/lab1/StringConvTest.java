@@ -2,8 +2,7 @@ package lab1;
 
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StringConvTest {
     static StringConv strConv;
@@ -38,7 +37,12 @@ public class StringConvTest {
 
         @Test
         void invalidInput() {
-            assertEquals(12, strConv.strToInt("   "));
+            assertThrows(NumberFormatException.class, () -> strConv.strToInt("^!@#"));
+            assertThrows(NumberFormatException.class, () -> strConv.strToInt("number"));
+            assertThrows(NumberFormatException.class, () -> strConv.strToInt("123.5"));
+            assertThrows(NumberFormatException.class, () -> strConv.strToInt("123,5"));
+            assertThrows(NumberFormatException.class, () -> strConv.strToInt(null));
+            assertThrows(NumberFormatException.class, () -> strConv.strToInt("123alpha"));
         }
     }
 }
