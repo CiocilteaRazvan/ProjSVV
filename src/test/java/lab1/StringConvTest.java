@@ -5,7 +5,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StringConvTest {
-    static StringConv strConv;
+    private static StringConv strConv;
 
     @BeforeAll
     static void init() {
