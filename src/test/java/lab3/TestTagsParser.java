@@ -3,8 +3,8 @@ package lab3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static lab3.HelperClass.getUrlForPage;
 
-import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito.*;
 
 public class TestTagsParser {
 	TagsParser parser;
