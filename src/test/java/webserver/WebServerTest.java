@@ -13,9 +13,10 @@ public class WebServerTest {
     WebServer webServer;
 
     @Test
-    void testServerAwaitsConnection() throws Exception{
+    void testServerEmptiesInputBufferAndPrintsOutput() throws Exception{
+        BufferedReader mockBufferedReader = getMockBufferedReaderThreeLines();
+        PrintWriter mockPrintWriter = getMockPrintWriter();
         Socket mockSocket = getMockSocket();
-        BufferedReader mockBufferedReader = getMockBufferedReader();
         webServer = new WebServer(9999) {
             @Override
             protected Socket getSocket (ServerSocket serverSocket) throws IOException {
@@ -26,25 +27,32 @@ public class WebServerTest {
             protected BufferedReader getInStream() throws IOException {
                 return mockBufferedReader;
             }
+
+            @Override
+            protected PrintWriter getOutStream() throws IOException {
+                return mockPrintWriter;
+            }
         };
 
         webServer.readFromSocket();
         webServer.close();
-        verify(mockSocket).getOutputStream();
+
+        verify(mockBufferedReader, times(2)).readLine();
+        verify(mockPrintWriter, times(2)).println();
     }
 
     private Socket getMockSocket() throws IOException {
-        Socket mockSocket = mock(Socket.class);
-        when(mockSocket.getOutputStream()).thenReturn(mock(OutputStream.class));
-
-        return mockSocket;
+        return mock(Socket.class);
     }
 
-    private BufferedReader getMockBufferedReader() throws IOException {
+    private PrintWriter getMockPrintWriter() {
+        return mock(PrintWriter.class);
+    }
+
+    private BufferedReader getMockBufferedReaderThreeLines() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine()).thenReturn("Hello World!");
         when(mockBufferedReader.readLine()).thenReturn("quit");
-
         return mockBufferedReader;
     }
 }
