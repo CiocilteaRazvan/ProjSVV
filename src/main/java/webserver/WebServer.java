@@ -3,67 +3,43 @@ package webserver;
 import java.net.*;
 import java.io.*;
 
-public class WebServer extends Thread {
-	protected Socket clientSocket;
+public class WebServer{
+	private Socket socket;
+	private PrintWriter out;
+	private BufferedReader in;
 
-	public static void main(String[] args) throws IOException {
-		ServerSocket serverSocket = null;
-
+	private WebServer(int portNumber) {
 		try {
-			serverSocket = new ServerSocket(10008);
+			ServerSocket serverSocket = new ServerSocket(10008);
 			System.out.println("Connection Socket Created");
-			try {
-				while (true) {
-					System.out.println("Waiting for Connection");
-					new WebServer(serverSocket.accept());
-				}
-			} catch (IOException e) {
-				System.err.println("Accept failed.");
-				System.exit(1);
-			}
-		} catch (IOException e) {
-			System.err.println("Could not listen on port: 10008.");
-			System.exit(1);
-		} finally {
-			try {
-				serverSocket.close();
-			} catch (IOException e) {
-				System.err.println("Could not close port: 10008.");
-				System.exit(1);
-			}
-		}
-	}
+			System.out.println("Waiting for Connection");
+			this.socket = serverSocket.accept();
+			System.out.println("Connection accepted!");
 
-	private WebServer(Socket clientSoc) {
-		clientSocket = clientSoc;
-		start();
-	}
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out = new PrintWriter(socket.getOutputStream(), true);
 
-	public void run() {
-		System.out.println("New Communication Thread Started");
-
-		try {
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
-					true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					clientSocket.getInputStream()));
-
-			String inputLine;
-			
-			while ((inputLine = in.readLine()) != null) {
-				System.out.println("Server: " + inputLine);
-				out.println(inputLine);
-
-				if (inputLine.trim().equals(""))
-					break;
-			}
-
+			readFromSocket();
 			out.close();
 			in.close();
-			clientSocket.close();
-		} catch (IOException e) {
-			System.err.println("Problem with Communication Server");
-			System.exit(1);
+			socket.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
+
+	private void readFromSocket() throws IOException {
+		String inputLine;
+		while ((inputLine = in.readLine()) != null) {
+			System.out.println("Server: " + inputLine);
+			out.println(inputLine);
+
+			if (inputLine.trim().equals("quit"))
+				break;
+		}
+	}
+
+	public static void main(String args[]) {
+		WebServer webServer = new WebServer(10008);
 	}
 }
