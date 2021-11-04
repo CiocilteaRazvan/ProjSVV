@@ -5,30 +5,22 @@ import java.io.*;
 
 public class WebServer{
 	private Socket socket;
-	private PrintWriter out;
 	private BufferedReader in;
+	private PrintWriter out;
 
-	private WebServer(int portNumber) {
+	public WebServer(int portNumber) {
 		try {
-			ServerSocket serverSocket = new ServerSocket(10008);
-			System.out.println("Connection Socket Created");
-			System.out.println("Waiting for Connection");
-			this.socket = serverSocket.accept();
-			System.out.println("Connection accepted!");
+			ServerSocket serverSocket = getServerSocket(portNumber);
+			this.socket = getSocket(serverSocket);
 
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(socket.getOutputStream(), true);
-
-			readFromSocket();
-			out.close();
-			in.close();
-			socket.close();
+			in = getInStream();
+			out = getOutStream();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void readFromSocket() throws IOException {
+	public void readFromSocket() throws IOException {
 		String inputLine;
 		while ((inputLine = in.readLine()) != null) {
 			System.out.println("Server: " + inputLine);
@@ -39,7 +31,25 @@ public class WebServer{
 		}
 	}
 
-	public static void main(String args[]) {
-		WebServer webServer = new WebServer(10008);
+	public void close() throws IOException{
+		out.close();
+		in.close();
+		socket.close();
+	}
+
+	protected Socket getSocket(ServerSocket serverSocket) throws IOException {
+		return serverSocket.accept();
+	}
+
+	protected PrintWriter getOutStream() throws IOException {
+		return new PrintWriter(socket.getOutputStream(), true);
+	}
+
+	protected BufferedReader getInStream() throws IOException {
+		return new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	}
+
+	protected ServerSocket getServerSocket(int portNumber) throws IOException {
+		return new ServerSocket(portNumber);
 	}
 }

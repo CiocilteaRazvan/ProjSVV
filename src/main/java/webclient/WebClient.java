@@ -13,33 +13,39 @@ public class WebClient {
 
     public WebClient(String address, int portNumber) {
         try {
-            System.out.println("Trying to connect");
-            socket = new Socket(address, portNumber);
-            System.out.println("Connection Success");
-            in = new BufferedReader(new InputStreamReader(System.in));
-            out = new PrintWriter(socket.getOutputStream(), true);
-
-            writeToSocket();
-
-            in.close();
-            out.close();
-            socket.close();
+            socket = getSocket(address, portNumber);
+            in = getInStream();
+            out = getOutStream();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void writeToSocket() throws IOException {
+    private BufferedReader getInStream() {
+        return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    private PrintWriter getOutStream() throws IOException {
+        return new PrintWriter(socket.getOutputStream(), true);
+    }
+
+    private Socket getSocket(String address, int portNumber) throws IOException {
+        return new Socket(address, portNumber);
+    }
+
+    public void writeToSocket() throws IOException {
         String line;
         while ((line = in.readLine()) != null) {
             out.println(line);
 
-            if(line.equals("quit"))
+            if (line.equals("quit"))
                 break;
         }
     }
 
-    public static void main(String args[]) {
-        WebClient client = new WebClient("127.0.0.1", 10008);
+    public void close() throws IOException{
+        in.close();
+        out.close();
+        socket.close();
     }
 }
