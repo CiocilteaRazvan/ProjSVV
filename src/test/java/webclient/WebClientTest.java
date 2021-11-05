@@ -37,7 +37,7 @@ public class WebClientTest {
                 MockSocketIn,
                 mockSocketOut);
 
-        inOrder.verify(mockSocketOut).println(Commands.GET_HTML_FILES);
+        inOrder.verify(mockSocketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
         inOrder.verify(mockSocketOut).println(Commands.END_MESSAGE);
         inOrder.verify(MockSocketIn, times(2)).readLine();
     }
@@ -92,14 +92,13 @@ public class WebClientTest {
         String expected = "a.html\n";
         assertEquals(expected, response);
 
-        //TODO change variable names sIn and uOut
-        BufferedReader sIn = mocksContainer.getMockSocketIn();
-        PrintWriter uOut = mocksContainer.getMockUserOut();
-        InOrder inOrder = inOrder(sIn, uOut);
-        inOrder.verify(sIn).readLine();
-        inOrder.verify(uOut).println("a.html");
-        inOrder.verify(sIn).readLine();
-        inOrder.verify(uOut).println(Commands.END_MESSAGE);
+        BufferedReader socketIn = mocksContainer.getMockSocketIn();
+        PrintWriter userOut = mocksContainer.getMockUserOut();
+        InOrder inOrder = inOrder(socketIn, userOut);
+        inOrder.verify(socketIn).readLine();
+        inOrder.verify(userOut).println("a.html");
+        inOrder.verify(socketIn).readLine();
+        inOrder.verify(userOut).println(Commands.END_MESSAGE);
     }
 
     @DisplayName("Test if askForHtmlPages() sends correct commands to socket")
@@ -110,10 +109,10 @@ public class WebClientTest {
         webClient = getStubbedWebClient(mocksContainer);
         webClient.askForAvailableHtmlPages();
 
-        PrintWriter sOut = mocksContainer.getMockSocketOut();
-        InOrder inOrder = inOrder(sOut);
-        inOrder.verify(sOut).println(Commands.GET_HTML_FILES);
-        inOrder.verify(sOut).println(Commands.END_MESSAGE);
+        PrintWriter socketOut = mocksContainer.getMockSocketOut();
+        InOrder inOrder = inOrder(socketOut);
+        inOrder.verify(socketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
+        inOrder.verify(socketOut).println(Commands.END_MESSAGE);
     }
 
 

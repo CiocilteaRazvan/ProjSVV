@@ -58,7 +58,7 @@ public class WebClient {
     }
 
     protected void askForAvailableHtmlPages() {
-        socketOut.println(Commands.GET_HTML_FILES);
+        socketOut.println(Commands.REQUEST_AVAILABLE_HTML_FILES);
         socketOut.println(Commands.END_MESSAGE);
     }
 
