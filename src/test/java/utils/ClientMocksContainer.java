@@ -6,33 +6,33 @@ import java.net.Socket;
 
 public class ClientMocksContainer {
     private Socket mockSocket = null;
-    private BufferedReader mockUserBufferedReader = null;
-    private BufferedReader mockSocketBufferedReader = null;
-    private PrintWriter mockPrintWriter = null;
+    private BufferedReader mockUserIn = null;
+    private BufferedReader mockSocketIn = null;
+    private PrintWriter mockOutStream = null;
 
     public ClientMocksContainer(Socket mockSocket,
-                                BufferedReader mockUserBufferedReader,
-                                BufferedReader mockSocketBufferedReader,
-                                PrintWriter mockPrintWriter) {
+                                BufferedReader mockUserIn,
+                                BufferedReader mockSocketIn,
+                                PrintWriter mockOutStream) {
         this.mockSocket = mockSocket;
-        this.mockUserBufferedReader = mockUserBufferedReader;
-        this.mockSocketBufferedReader = mockSocketBufferedReader;
-        this.mockPrintWriter = mockPrintWriter;
+        this.mockUserIn = mockUserIn;
+        this.mockSocketIn = mockSocketIn;
+        this.mockOutStream = mockOutStream;
     }
 
     public Socket getMockSocket() {
         return mockSocket;
     }
 
-    public BufferedReader getMockUserBufferedReader() {
-        return mockUserBufferedReader;
+    public BufferedReader getMockUserIn() {
+        return mockUserIn;
     }
 
-    public BufferedReader getMockSocketBufferedReader() {
-        return mockSocketBufferedReader;
+    public BufferedReader getMockSocketIn() {
+        return mockSocketIn;
     }
 
-    public PrintWriter getMockPrintWriter() {
-        return mockPrintWriter;
+    public PrintWriter getMockOutStream() {
+        return mockOutStream;
     }
 }
