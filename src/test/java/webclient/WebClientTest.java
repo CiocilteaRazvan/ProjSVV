@@ -86,7 +86,7 @@ public class WebClientTest {
         ClientMocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
-        webClient.readFromSocket();
+        webClient.writeSocketToUser();
     }
 
 

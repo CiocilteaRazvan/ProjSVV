@@ -10,9 +10,10 @@ import java.net.Socket;
 
 public class WebClient {
     private Socket socket;
-    private PrintWriter socketOut;
     private BufferedReader socketIn;
+    private PrintWriter socketOut;
     private BufferedReader userIn;
+    private PrintWriter userOut;
 
     private String response;
 
@@ -20,6 +21,7 @@ public class WebClient {
         try {
             socket = getSocket(address, portNumber);
             userIn = getInStreamUser();
+            userOut = getOutStreamUser();
             socketIn = getInStreamSocket();
             socketOut = getOutStream();
         } catch (Exception e) {
@@ -29,7 +31,7 @@ public class WebClient {
 
     public void start() throws IOException {
         askForHtmlPages();
-        readFromSocket();
+        writeSocketToUser();
         writeUserToSocket();
         close();
     }
@@ -44,14 +46,14 @@ public class WebClient {
         }
     }
 
-    protected void readFromSocket() throws IOException {
+    protected void writeSocketToUser() throws IOException {
         response = "";
         String line;
         while ((line = socketIn.readLine()) != null) {
-            response += line + "\n";
-
+            userOut.println(line);
             if (line.equals(Commands.END_MESSAGE))
                 break;
+            response += line + "\n";
         }
     }
 
@@ -73,6 +75,10 @@ public class WebClient {
 
     protected BufferedReader getInStreamUser() {
         return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    protected PrintWriter getOutStreamUser() {
+        return new PrintWriter(System.out);
     }
 
     protected BufferedReader getInStreamSocket() throws IOException {
