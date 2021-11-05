@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -80,13 +81,24 @@ public class WebClientTest {
         inOrder.verify(mockSocketOut).println(Commands.END_MESSAGE);
     }
 
-    @DisplayName("Test if readFromSocket() prints from socket input to user output and saves reply in response attribute")
+    @DisplayName("Test if readFromSocket() prints from socket input to user output and returns correct String")
     @Test
     void testReadFromSocket() throws Exception {
         ClientMocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
-        webClient.writeSocketToUser();
+        String response = webClient.writeSocketToUser();
+
+        String expected = "a.html\n";
+        assertEquals(expected, response);
+
+        BufferedReader sIn = mocksContainer.getMockSocketIn();
+        PrintWriter uOut = mocksContainer.getMockUserOut();
+        InOrder inOrder = inOrder(sIn, uOut);
+        inOrder.verify(sIn).readLine();
+        inOrder.verify(uOut).println("a.html");
+        inOrder.verify(sIn).readLine();
+        inOrder.verify(uOut).println(Commands.END_MESSAGE);
     }
 
 
@@ -112,7 +124,7 @@ public class WebClientTest {
     private BufferedReader getMockSocketIn() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
-                .thenReturn("src/main/java/resources/TestSite/a.html")
+                .thenReturn("a.html")
                 .thenReturn(Commands.END_MESSAGE);
 
         return mockBufferedReader;
@@ -124,14 +136,17 @@ public class WebClientTest {
 
     private ClientMocksContainer getNewClientMocksContainer() throws IOException {
         Socket mockSocket = getMockSocket();
-        BufferedReader mockUserBufferedReader = getMockUserIn();
-        BufferedReader mockSocketBufferedReader = getMockSocketIn();
-        PrintWriter mockPrintWriter = getMockOutStream();
+        BufferedReader mockUserIn = getMockUserIn();
+        PrintWriter mockUserOut = getMockOutStream();
+        BufferedReader mockSocketIn = getMockSocketIn();
+        PrintWriter mockSocketOut = getMockOutStream();
 
-        return new ClientMocksContainer(mockSocket,
-                mockUserBufferedReader,
-                mockSocketBufferedReader,
-                mockPrintWriter);
+        return new ClientMocksContainer(
+                mockSocket,
+                mockUserIn,
+                mockUserOut,
+                mockSocketIn,
+                mockSocketOut);
     }
 
     private WebClient getStubbedWebClient(ClientMocksContainer mocksContainer) {
@@ -144,6 +159,11 @@ public class WebClientTest {
             @Override
             protected BufferedReader getInStreamUser() {
                 return mocksContainer.getMockUserIn();
+            }
+
+            @Override
+            protected PrintWriter getOutStreamUser() {
+                return mocksContainer.getMockUserOut();
             }
 
             @Override

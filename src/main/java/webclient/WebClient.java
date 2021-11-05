@@ -15,8 +15,6 @@ public class WebClient {
     private BufferedReader userIn;
     private PrintWriter userOut;
 
-    private String response;
-
     public WebClient(String address, int portNumber) {
         try {
             socket = getSocket(address, portNumber);
@@ -46,8 +44,8 @@ public class WebClient {
         }
     }
 
-    protected void writeSocketToUser() throws IOException {
-        response = "";
+    protected String writeSocketToUser() throws IOException {
+        String response = "";
         String line;
         while ((line = socketIn.readLine()) != null) {
             userOut.println(line);
@@ -55,6 +53,8 @@ public class WebClient {
                 break;
             response += line + "\n";
         }
+
+        return response;
     }
 
     protected void askForHtmlPages() {
@@ -67,10 +67,6 @@ public class WebClient {
         socketIn.close();
         socketOut.close();
         socket.close();
-    }
-
-    public String getResponse() {
-        return response;
     }
 
     protected BufferedReader getInStreamUser() {
