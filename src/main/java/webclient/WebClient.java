@@ -26,6 +26,8 @@ public class WebClient {
     }
 
     public void start() throws IOException {
+        askForHtmlPages();
+        readFromSocket();
         writeUserToSocket();
         close();
     }
@@ -60,6 +62,7 @@ public class WebClient {
 
     private void close() throws IOException{
         inUser.close();
+        inSocket.close();
         out.close();
         socket.close();
     }

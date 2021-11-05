@@ -2,6 +2,7 @@ package webclient;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import utils.Commands;
 
 import java.io.BufferedReader;
@@ -19,7 +20,8 @@ public class WebClientTest {
     @Test
     void testWebClientReadWriteClose() throws Exception {
         Socket mockSocket = getMockSocket();
-        BufferedReader mockBufferedReader = getMockBufferedReader();
+        BufferedReader mockUserBufferedReader = getMockUserBufferedReader();
+        BufferedReader mockSocketBufferedReader = getMockSocketBufferedReader();
         PrintWriter mockPrintWriter = getMockPrintWriter();
 
         webClient = new WebClient("127.0.0.1", 10008) {
@@ -30,7 +32,12 @@ public class WebClientTest {
 
             @Override
             protected BufferedReader getInStreamUser() {
-                return mockBufferedReader;
+                return mockUserBufferedReader;
+            }
+
+            @Override
+            protected BufferedReader getInStreamSocket() {
+                return mockSocketBufferedReader;
             }
 
             @Override
@@ -41,24 +48,44 @@ public class WebClientTest {
 
         webClient.start();
 
-        verify(mockBufferedReader, times(3)).readLine();
-        verify(mockPrintWriter).println("First Message");
-        verify(mockPrintWriter).println("Second Message");
-        verify(mockPrintWriter).println(Commands.END_MESSAGE);
-        verify(mockSocket).close();
-        verify(mockBufferedReader).close();
-        verify(mockPrintWriter).close();
+        InOrder inOrder = inOrder(mockSocket,
+                mockUserBufferedReader,
+                mockSocketBufferedReader,
+                mockPrintWriter);
+
+        inOrder.verify(mockPrintWriter).println(Commands.GET_HTML_FILES);
+        inOrder.verify(mockPrintWriter).println(Commands.END_MESSAGE);
+        inOrder.verify(mockSocketBufferedReader, times(2)).readLine();
+        inOrder.verify(mockUserBufferedReader).readLine();
+        inOrder.verify(mockPrintWriter).println("First Message");
+        inOrder.verify(mockUserBufferedReader).readLine();
+        inOrder.verify(mockPrintWriter).println("Second Message");
+        inOrder.verify(mockUserBufferedReader).readLine();
+        inOrder.verify(mockPrintWriter).println(Commands.END_MESSAGE);
+        inOrder.verify(mockUserBufferedReader).close();
+        inOrder.verify(mockSocketBufferedReader).close();
+        inOrder.verify(mockPrintWriter).close();
+        inOrder.verify(mockSocket).close();
     }
 
     private PrintWriter getMockPrintWriter() {
         return mock(PrintWriter.class);
     }
 
-    private BufferedReader getMockBufferedReader() throws IOException{
+    private BufferedReader getMockUserBufferedReader() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
                 .thenReturn("First Message")
                 .thenReturn("Second Message")
+                .thenReturn(Commands.END_MESSAGE);
+
+        return mockBufferedReader;
+    }
+
+    private BufferedReader getMockSocketBufferedReader() throws IOException {
+        BufferedReader mockBufferedReader = mock(BufferedReader.class);
+        when(mockBufferedReader.readLine())
+                .thenReturn("src/main/java/resources/TestSite/a.html")
                 .thenReturn(Commands.END_MESSAGE);
 
         return mockBufferedReader;
