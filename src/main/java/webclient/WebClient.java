@@ -1,5 +1,7 @@
 package webclient;
 
+import utils.Commands;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,9 +35,26 @@ public class WebClient {
         while ((line = inUser.readLine()) != null) {
             out.println(line);
 
-            if (line.equals("end"))
+            if (line.equals(Commands.END_MESSAGE))
                 break;
         }
+    }
+
+    private String readFromSocket() throws IOException {
+        String response = "";
+        String line;
+        while ((line = inSocket.readLine()) != null) {
+            response += line + "\n";
+
+            if (line.equals(Commands.END_MESSAGE))
+                break;
+        }
+
+        return response;
+    }
+
+    private void askForHtmlPages() {
+        out.println("get html options");
     }
 
     private void close() throws IOException{

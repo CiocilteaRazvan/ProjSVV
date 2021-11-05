@@ -2,6 +2,7 @@ package webserver;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import utils.Commands;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -40,7 +41,7 @@ public class WebServerTest {
         verify(mockBufferedReader, times(3)).readLine();
         verify(mockPrintWriter).println("First message");
         verify(mockPrintWriter).println("Second message");
-        verify(mockPrintWriter).println("end");
+        verify(mockPrintWriter).println(Commands.END_MESSAGE);
         verify(mockBufferedReader, times(1)).close();
         verify(mockPrintWriter, times(1)).close();
         verify(mockSocket, times(1)).close();
@@ -59,7 +60,7 @@ public class WebServerTest {
         when(mockBufferedReader.readLine())
                 .thenReturn("First message")
                 .thenReturn("Second message")
-                .thenReturn("end");
+                .thenReturn(Commands.END_MESSAGE);
 
         return mockBufferedReader;
     }

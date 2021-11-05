@@ -2,6 +2,7 @@ package webclient;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import utils.Commands;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class WebClientTest {
         verify(mockBufferedReader, times(3)).readLine();
         verify(mockPrintWriter).println("First Message");
         verify(mockPrintWriter).println("Second Message");
-        verify(mockPrintWriter).println("end");
+        verify(mockPrintWriter).println(Commands.END_MESSAGE);
         verify(mockSocket).close();
         verify(mockBufferedReader).close();
         verify(mockPrintWriter).close();
@@ -58,7 +59,7 @@ public class WebClientTest {
         when(mockBufferedReader.readLine())
                 .thenReturn("First Message")
                 .thenReturn("Second Message")
-                .thenReturn("end");
+                .thenReturn(Commands.END_MESSAGE);
 
         return mockBufferedReader;
     }

@@ -1,5 +1,7 @@
 package webserver;
 
+import utils.Commands;
+
 import java.net.*;
 import java.io.*;
 
@@ -31,7 +33,7 @@ public class WebServer{
 			System.out.println("Server: " + inputLine);
 			out.println(inputLine);
 
-			if (inputLine.trim().equals("end"))
+			if (inputLine.trim().equals(Commands.END_MESSAGE))
 				break;
 		}
 	}
