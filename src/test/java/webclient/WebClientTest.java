@@ -28,7 +28,7 @@ public class WebClientTest {
             }
 
             @Override
-            protected BufferedReader getInStream() {
+            protected BufferedReader getInStreamUser() {
                 return mockBufferedReader;
             }
 

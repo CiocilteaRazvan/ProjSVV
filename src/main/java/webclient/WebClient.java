@@ -9,12 +9,14 @@ import java.net.Socket;
 public class WebClient {
     private Socket socket;
     private PrintWriter out;
-    private BufferedReader in;
+    private BufferedReader inSocket;
+    private BufferedReader inUser;
 
     public WebClient(String address, int portNumber) {
         try {
             socket = getSocket(address, portNumber);
-            in = getInStream();
+            inUser = getInStreamUser();
+            inSocket = getInStreamSocket();
             out = getOutStream();
         } catch (Exception e) {
             e.printStackTrace();
@@ -28,7 +30,7 @@ public class WebClient {
 
     private void writeToSocket() throws IOException {
         String line;
-        while ((line = in.readLine()) != null) {
+        while ((line = inUser.readLine()) != null) {
             out.println(line);
 
             if (line.equals("end"))
@@ -37,13 +39,17 @@ public class WebClient {
     }
 
     private void close() throws IOException{
-        in.close();
+        inUser.close();
         out.close();
         socket.close();
     }
 
-    protected BufferedReader getInStream() {
+    protected BufferedReader getInStreamUser() {
         return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    protected BufferedReader getInStreamSocket() throws IOException {
+        return new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
     protected PrintWriter getOutStream() throws IOException {

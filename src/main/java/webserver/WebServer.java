@@ -46,12 +46,12 @@ public class WebServer{
 		return serverSocket.accept();
 	}
 
-	protected PrintWriter getOutStream() throws IOException {
-		return new PrintWriter(socket.getOutputStream(), true);
-	}
-
 	protected BufferedReader getInStream() throws IOException {
 		return new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	}
+
+	protected PrintWriter getOutStream() throws IOException {
+		return new PrintWriter(socket.getOutputStream(), true);
 	}
 
 	protected ServerSocket getServerSocket(int portNumber) throws IOException {
