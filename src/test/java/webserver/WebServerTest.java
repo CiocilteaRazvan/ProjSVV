@@ -60,6 +60,7 @@ public class WebServerTest {
                 .thenReturn("First message")
                 .thenReturn("Second message")
                 .thenReturn("end");
+
         return mockBufferedReader;
     }
 }
