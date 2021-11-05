@@ -14,7 +14,7 @@ public class WebServerTest {
 
     @DisplayName("The web server receives two lines then the quit command which are printed. After this, the web server closes itself")
     @Test
-    void testServerEmptiesInputBufferAndPrintsOutput() throws Exception{
+    void testWebServerReadWriteClose() throws Exception{
         BufferedReader mockBufferedReader = getMockBufferedReaderThreeLines();
         PrintWriter mockPrintWriter = getMockPrintWriter();
         Socket mockSocket = getMockSocket();
