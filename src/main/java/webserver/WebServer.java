@@ -7,16 +7,16 @@ import java.io.*;
 
 public class WebServer{
 	private Socket socket;
-	private BufferedReader in;
-	private PrintWriter out;
+	private BufferedReader socketIn;
+	private PrintWriter socketOut;
 
 	public WebServer(int portNumber) {
 		try {
 			ServerSocket serverSocket = getServerSocket(portNumber);
 			this.socket = getSocket(serverSocket);
 
-			in = getInStream();
-			out = getOutStream();
+			socketIn = getInStream();
+			socketOut = getOutStream();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -29,9 +29,9 @@ public class WebServer{
 
 	private void readFromSocket() throws IOException {
 		String inputLine;
-		while ((inputLine = in.readLine()) != null) {
+		while ((inputLine = socketIn.readLine()) != null) {
 			System.out.println("Server: " + inputLine);
-			out.println(inputLine);
+			socketOut.println(inputLine);
 
 			if (inputLine.trim().equals(Commands.END_MESSAGE))
 				break;
@@ -39,8 +39,8 @@ public class WebServer{
 	}
 
 	private void close() throws IOException{
-		out.close();
-		in.close();
+		socketOut.close();
+		socketIn.close();
 		socket.close();
 	}
 
