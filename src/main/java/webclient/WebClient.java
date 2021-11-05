@@ -10,16 +10,16 @@ import java.net.Socket;
 
 public class WebClient {
     private Socket socket;
-    private PrintWriter out;
-    private BufferedReader inSocket;
-    private BufferedReader inUser;
+    private PrintWriter socketOut;
+    private BufferedReader socketIn;
+    private BufferedReader userIn;
 
     public WebClient(String address, int portNumber) {
         try {
             socket = getSocket(address, portNumber);
-            inUser = getInStreamUser();
-            inSocket = getInStreamSocket();
-            out = getOutStream();
+            userIn = getInStreamUser();
+            socketIn = getInStreamSocket();
+            socketOut = getOutStream();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,8 +34,8 @@ public class WebClient {
 
     protected void writeUserToSocket() throws IOException {
         String line;
-        while ((line = inUser.readLine()) != null) {
-            out.println(line);
+        while ((line = userIn.readLine()) != null) {
+            socketOut.println(line);
 
             if (line.equals(Commands.END_MESSAGE))
                 break;
@@ -45,7 +45,7 @@ public class WebClient {
     protected String readFromSocket() throws IOException {
         String response = "";
         String line;
-        while ((line = inSocket.readLine()) != null) {
+        while ((line = socketIn.readLine()) != null) {
             response += line + "\n";
 
             if (line.equals(Commands.END_MESSAGE))
@@ -56,14 +56,14 @@ public class WebClient {
     }
 
     protected void askForHtmlPages() {
-        out.println(Commands.GET_HTML_FILES);
-        out.println(Commands.END_MESSAGE);
+        socketOut.println(Commands.GET_HTML_FILES);
+        socketOut.println(Commands.END_MESSAGE);
     }
 
     protected void close() throws IOException{
-        inUser.close();
-        inSocket.close();
-        out.close();
+        userIn.close();
+        socketIn.close();
+        socketOut.close();
         socket.close();
     }
 
