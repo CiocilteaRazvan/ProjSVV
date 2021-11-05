@@ -35,13 +35,12 @@ public class WebServerTest {
             }
         };
 
-        webServer.readFromSocket();
-        webServer.close();
+        webServer.start();
 
         verify(mockBufferedReader, times(3)).readLine();
         verify(mockPrintWriter).println("First message");
         verify(mockPrintWriter).println("Second message");
-        verify(mockPrintWriter).println("quit");
+        verify(mockPrintWriter).println("end");
         verify(mockBufferedReader, times(1)).close();
         verify(mockPrintWriter, times(1)).close();
         verify(mockSocket, times(1)).close();
@@ -60,7 +59,7 @@ public class WebServerTest {
         when(mockBufferedReader.readLine())
                 .thenReturn("First message")
                 .thenReturn("Second message")
-                .thenReturn("quit");
+                .thenReturn("end");
         return mockBufferedReader;
     }
 }

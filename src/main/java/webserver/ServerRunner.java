@@ -6,8 +6,7 @@ public class ServerRunner implements Runnable{
     public void run() {
         WebServer webServer = new WebServer(Config.PORT);
         try {
-            webServer.readFromSocket();
-            webServer.close();
+            webServer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }

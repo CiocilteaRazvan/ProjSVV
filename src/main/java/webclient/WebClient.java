@@ -21,31 +21,36 @@ public class WebClient {
         }
     }
 
-    private BufferedReader getInStream() {
-        return new BufferedReader(new InputStreamReader(System.in));
+    public void start() throws IOException {
+        writeToSocket();
+        close();
     }
 
-    private PrintWriter getOutStream() throws IOException {
-        return new PrintWriter(socket.getOutputStream(), true);
-    }
-
-    private Socket getSocket(String address, int portNumber) throws IOException {
-        return new Socket(address, portNumber);
-    }
-
-    public void writeToSocket() throws IOException {
+    private void writeToSocket() throws IOException {
         String line;
         while ((line = in.readLine()) != null) {
             out.println(line);
 
-            if (line.equals("quit"))
+            if (line.equals("end"))
                 break;
         }
     }
 
-    public void close() throws IOException{
+    private void close() throws IOException{
         in.close();
         out.close();
         socket.close();
+    }
+
+    protected BufferedReader getInStream() {
+        return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    protected PrintWriter getOutStream() throws IOException {
+        return new PrintWriter(socket.getOutputStream(), true);
+    }
+
+    protected Socket getSocket(String address, int portNumber) throws IOException {
+        return new Socket(address, portNumber);
     }
 }

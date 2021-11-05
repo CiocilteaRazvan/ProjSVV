@@ -20,18 +20,23 @@ public class WebServer{
 		}
 	}
 
-	public void readFromSocket() throws IOException {
+	public void start() throws IOException{
+		readFromSocket();
+		close();
+	}
+
+	private void readFromSocket() throws IOException {
 		String inputLine;
 		while ((inputLine = in.readLine()) != null) {
 			System.out.println("Server: " + inputLine);
 			out.println(inputLine);
 
-			if (inputLine.trim().equals("quit"))
+			if (inputLine.trim().equals("end"))
 				break;
 		}
 	}
 
-	public void close() throws IOException{
+	private void close() throws IOException{
 		out.close();
 		in.close();
 		socket.close();
