@@ -8,16 +8,16 @@ public class ClientMocksContainer {
     private Socket mockSocket = null;
     private BufferedReader mockUserIn = null;
     private BufferedReader mockSocketIn = null;
-    private PrintWriter mockOutStream = null;
+    private PrintWriter mockSocketOut = null;
 
     public ClientMocksContainer(Socket mockSocket,
                                 BufferedReader mockUserIn,
                                 BufferedReader mockSocketIn,
-                                PrintWriter mockOutStream) {
+                                PrintWriter mockSocketOut) {
         this.mockSocket = mockSocket;
         this.mockUserIn = mockUserIn;
         this.mockSocketIn = mockSocketIn;
-        this.mockOutStream = mockOutStream;
+        this.mockSocketOut = mockSocketOut;
     }
 
     public Socket getMockSocket() {
@@ -32,7 +32,7 @@ public class ClientMocksContainer {
         return mockSocketIn;
     }
 
-    public PrintWriter getMockOutStream() {
-        return mockOutStream;
+    public PrintWriter getMockSocketOut() {
+        return mockSocketOut;
     }
 }

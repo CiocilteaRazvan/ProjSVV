@@ -27,7 +27,7 @@ public class WebClientTest {
         webClient.start();
 
         Socket mockSocket = mocksContainer.getMockSocket();
-        PrintWriter mockSocketOut = mocksContainer.getMockOutStream();
+        PrintWriter mockSocketOut = mocksContainer.getMockSocketOut();
         BufferedReader mockUserIn = mocksContainer.getMockUserIn();
         BufferedReader MockSocketIn = mocksContainer.getMockSocketIn();
 
@@ -50,7 +50,7 @@ public class WebClientTest {
         webClient.close();
 
         Socket mockSocket = mocksContainer.getMockSocket();
-        PrintWriter mockSocketOut = mocksContainer.getMockOutStream();
+        PrintWriter mockSocketOut = mocksContainer.getMockSocketOut();
         BufferedReader mockUserIn = mocksContainer.getMockUserIn();
         BufferedReader mockSocketIn = mocksContainer.getMockSocketIn();
 
@@ -69,7 +69,7 @@ public class WebClientTest {
         webClient.writeUserToSocket();
 
         BufferedReader mockUserIn = mocksContainer.getMockUserIn();
-        PrintWriter mockSocketOut = mocksContainer.getMockOutStream();
+        PrintWriter mockSocketOut = mocksContainer.getMockSocketOut();
 
         InOrder inOrder = inOrder(mockUserIn, mockSocketOut);
         inOrder.verify(mockUserIn).readLine();
@@ -143,7 +143,7 @@ public class WebClientTest {
 
             @Override
             protected PrintWriter getOutStream() {
-                return mocksContainer.getMockOutStream();
+                return mocksContainer.getMockSocketOut();
             }
         };
     }
