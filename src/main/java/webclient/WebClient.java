@@ -28,7 +28,7 @@ public class WebClient {
     }
 
     public void start() throws IOException {
-        askForHtmlPages();
+        askForAvailableHtmlPages();
         writeSocketToUser();
         writeUserToSocket();
         close();
@@ -57,7 +57,7 @@ public class WebClient {
         return response;
     }
 
-    protected void askForHtmlPages() {
+    protected void askForAvailableHtmlPages() {
         socketOut.println(Commands.GET_HTML_FILES);
         socketOut.println(Commands.END_MESSAGE);
     }

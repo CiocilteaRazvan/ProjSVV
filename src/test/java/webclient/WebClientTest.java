@@ -101,6 +101,12 @@ public class WebClientTest {
         inOrder.verify(uOut).println(Commands.END_MESSAGE);
     }
 
+    @DisplayName("Test if askForHtmlPages() sends correct commands to socket")
+    @Test
+    void testAskForAvailableHtmlPages() {
+
+    }
+
 
 
     //==================================== UTILS ====================================//
