@@ -12,7 +12,7 @@ import static org.mockito.Mockito.*;
 public class WebServerTest {
     private WebServer webServer;
 
-    @DisplayName("The web server receives two lines then the quit command which are printed. After this, the web server closes itself")
+    @DisplayName("The web server receives two lines then the 'end' command which are printed. After this, the web server closes itself")
     @Test
     void testWebServerReadWriteClose() throws Exception{
         BufferedReader mockBufferedReader = getMockBufferedReaderThreeLines();

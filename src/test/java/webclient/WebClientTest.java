@@ -1,5 +1,6 @@
 package webclient;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.*;
 public class WebClientTest {
     private WebClient webClient;
 
+    @DisplayName("Test that the web client reads two lines then the 'end' command and prints to output then closes itself")
     @Test
     void testWebClientReadWriteClose() throws Exception {
         Socket mockSocket = getMockSocket();
