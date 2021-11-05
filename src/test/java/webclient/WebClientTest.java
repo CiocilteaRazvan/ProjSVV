@@ -92,6 +92,7 @@ public class WebClientTest {
         String expected = "a.html\n";
         assertEquals(expected, response);
 
+        //TODO change variable names sIn and uOut
         BufferedReader sIn = mocksContainer.getMockSocketIn();
         PrintWriter uOut = mocksContainer.getMockUserOut();
         InOrder inOrder = inOrder(sIn, uOut);
@@ -103,8 +104,16 @@ public class WebClientTest {
 
     @DisplayName("Test if askForHtmlPages() sends correct commands to socket")
     @Test
-    void testAskForAvailableHtmlPages() {
+    void testAskForAvailableHtmlPages() throws Exception{
+        ClientMocksContainer mocksContainer = getNewClientMocksContainer();
 
+        webClient = getStubbedWebClient(mocksContainer);
+        webClient.askForAvailableHtmlPages();
+
+        PrintWriter sOut = mocksContainer.getMockSocketOut();
+        InOrder inOrder = inOrder(sOut);
+        inOrder.verify(sOut).println(Commands.GET_HTML_FILES);
+        inOrder.verify(sOut).println(Commands.END_MESSAGE);
     }
 
 
