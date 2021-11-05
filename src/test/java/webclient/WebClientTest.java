@@ -80,6 +80,16 @@ public class WebClientTest {
         inOrder.verify(mockSocketOut).println(Commands.END_MESSAGE);
     }
 
+    @DisplayName("Test if readFromSocket() prints from socket input to user output and saves reply in response attribute")
+    @Test
+    void testReadFromSocket() throws Exception {
+        ClientMocksContainer mocksContainer = getNewClientMocksContainer();
+
+        webClient = getStubbedWebClient(mocksContainer);
+        webClient.readFromSocket();
+    }
+
+
 
     //==================================== UTILS ====================================//
 
