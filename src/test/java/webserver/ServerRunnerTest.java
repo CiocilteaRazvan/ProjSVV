@@ -9,9 +9,9 @@ import static org.mockito.Mockito.*;
 public class ServerRunnerTest {
     ServerRunner serverRunner;
 
-    @DisplayName("Test that server runner calls start() method of the web server")
+    @DisplayName("Test that the server runner calls start() method of the web server")
     @Test
-    void testRunnerStartsWebServer() throws Exception{
+    void testRunnerStartsWebServer() throws Exception {
         WebServer mockWebServer = mock(WebServer.class);
         serverRunner = new ServerRunner() {
             @Override
