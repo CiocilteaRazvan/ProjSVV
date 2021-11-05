@@ -10,8 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -87,11 +85,11 @@ public class WebClientTest {
 
 
 
-    private PrintWriter getMockPrintWriter() {
+    private PrintWriter getMockOut() {
         return mock(PrintWriter.class);
     }
 
-    private BufferedReader getMockUserBufferedReader() throws IOException {
+    private BufferedReader getMockUserIn() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
                 .thenReturn("First Message")
@@ -101,7 +99,7 @@ public class WebClientTest {
         return mockBufferedReader;
     }
 
-    private BufferedReader getMockSocketBufferedReader() throws IOException {
+    private BufferedReader getMockSocketIn() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
                 .thenReturn("src/main/java/resources/TestSite/a.html")
@@ -116,9 +114,9 @@ public class WebClientTest {
 
     private ClientMocksContainer getNewClientMocksContainer() throws IOException {
         Socket mockSocket = getMockSocket();
-        BufferedReader mockUserBufferedReader = getMockUserBufferedReader();
-        BufferedReader mockSocketBufferedReader = getMockSocketBufferedReader();
-        PrintWriter mockPrintWriter = getMockPrintWriter();
+        BufferedReader mockUserBufferedReader = getMockUserIn();
+        BufferedReader mockSocketBufferedReader = getMockSocketIn();
+        PrintWriter mockPrintWriter = getMockOut();
 
         return new ClientMocksContainer(mockSocket,
                 mockUserBufferedReader,
