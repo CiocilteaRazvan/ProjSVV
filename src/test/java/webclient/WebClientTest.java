@@ -83,7 +83,7 @@ public class WebClientTest {
 
     @DisplayName("Test if readFromSocket() prints from socket input to user output and returns correct String")
     @Test
-    void testReadFromSocket() throws Exception {
+    void testWriteSocketToUser() throws Exception {
         ClientMocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
