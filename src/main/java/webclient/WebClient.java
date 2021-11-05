@@ -54,7 +54,8 @@ public class WebClient {
     }
 
     private void askForHtmlPages() {
-        out.println("get html options");
+        out.println(Commands.GET_HTML_FILES);
+        out.println(Commands.END_MESSAGE);
     }
 
     private void close() throws IOException{
