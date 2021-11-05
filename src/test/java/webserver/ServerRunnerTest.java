@@ -1,14 +1,25 @@
 package webserver;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 public class ServerRunnerTest {
     ServerRunner serverRunner;
 
+    @DisplayName("Test that server runner calls start() method of the web server")
     @Test
-    void test() {
-        assertTrue(true);
+    void testRunnerStartsWebServer() throws Exception{
+        WebServer mockWebServer = mock(WebServer.class);
+        serverRunner = new ServerRunner() {
+            @Override
+            protected WebServer getWebServer() {
+                return mockWebServer;
+            }
+        };
+
+        verify(mockWebServer, times(1)).start();
     }
 }
