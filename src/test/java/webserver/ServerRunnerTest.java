@@ -20,6 +20,8 @@ public class ServerRunnerTest {
             }
         };
 
+        serverRunner.run();
+
         verify(mockWebServer, times(1)).start();
     }
 }
