@@ -32,7 +32,7 @@ public class WebClient {
         close();
     }
 
-    private void writeUserToSocket() throws IOException {
+    protected void writeUserToSocket() throws IOException {
         String line;
         while ((line = inUser.readLine()) != null) {
             out.println(line);
@@ -42,7 +42,7 @@ public class WebClient {
         }
     }
 
-    private String readFromSocket() throws IOException {
+    protected String readFromSocket() throws IOException {
         String response = "";
         String line;
         while ((line = inSocket.readLine()) != null) {
@@ -55,12 +55,12 @@ public class WebClient {
         return response;
     }
 
-    private void askForHtmlPages() {
+    protected void askForHtmlPages() {
         out.println(Commands.GET_HTML_FILES);
         out.println(Commands.END_MESSAGE);
     }
 
-    private void close() throws IOException{
+    protected void close() throws IOException{
         inUser.close();
         inSocket.close();
         out.close();
