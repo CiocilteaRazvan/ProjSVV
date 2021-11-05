@@ -1,17 +1,18 @@
 package webserver;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class WebServerTest {
-    WebServer webServer;
+    private WebServer webServer;
 
+    @DisplayName("The web server receives two lines then the quit command which are printed. After this, the web server closes itself")
     @Test
     void testServerEmptiesInputBufferAndPrintsOutput() throws Exception{
         BufferedReader mockBufferedReader = getMockBufferedReaderThreeLines();
@@ -37,8 +38,13 @@ public class WebServerTest {
         webServer.readFromSocket();
         webServer.close();
 
-        verify(mockBufferedReader, times(2)).readLine();
-        verify(mockPrintWriter, times(2)).println();
+        verify(mockBufferedReader, times(3)).readLine();
+        verify(mockPrintWriter).println("First message");
+        verify(mockPrintWriter).println("Second message");
+        verify(mockPrintWriter).println("quit");
+        verify(mockBufferedReader, times(1)).close();
+        verify(mockPrintWriter, times(1)).close();
+        verify(mockSocket, times(1)).close();
     }
 
     private Socket getMockSocket() throws IOException {
@@ -51,8 +57,10 @@ public class WebServerTest {
 
     private BufferedReader getMockBufferedReaderThreeLines() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
-        when(mockBufferedReader.readLine()).thenReturn("Hello World!");
-        when(mockBufferedReader.readLine()).thenReturn("quit");
+        when(mockBufferedReader.readLine())
+                .thenReturn("First message")
+                .thenReturn("Second message")
+                .thenReturn("quit");
         return mockBufferedReader;
     }
 }
