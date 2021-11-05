@@ -64,6 +64,7 @@ public class WebClient {
 
     protected void close() throws IOException{
         userIn.close();
+        userOut.close();
         socketIn.close();
         socketOut.close();
         socket.close();

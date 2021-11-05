@@ -18,9 +18,9 @@ import static org.mockito.Mockito.*;
 public class WebClientTest {
     private WebClient webClient;
 
-    @DisplayName("Test that the web client reads two lines then the 'end' command and prints to output then closes itself")
+    @DisplayName("Test that the start method closes all required resources when finished")
     @Test
-    void testWebClientReadWriteClose() throws Exception {
+    void testStart() throws Exception {
         ClientMocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
@@ -29,17 +29,15 @@ public class WebClientTest {
 
         Socket mockSocket = mocksContainer.getMockSocket();
         PrintWriter mockSocketOut = mocksContainer.getMockSocketOut();
+        PrintWriter mockUserOut = mocksContainer.getMockUserOut();
         BufferedReader mockUserIn = mocksContainer.getMockUserIn();
-        BufferedReader MockSocketIn = mocksContainer.getMockSocketIn();
+        BufferedReader mockSocketIn = mocksContainer.getMockSocketIn();
 
-        InOrder inOrder = inOrder(mockSocket,
-                mockUserIn,
-                MockSocketIn,
-                mockSocketOut);
-
-        inOrder.verify(mockSocketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
-        inOrder.verify(mockSocketOut).println(Commands.END_MESSAGE);
-        inOrder.verify(MockSocketIn, times(2)).readLine();
+        verify(mockSocket).close();
+        verify(mockSocketOut).close();
+        verify(mockSocketIn).close();
+        verify(mockUserOut).close();
+        verify(mockUserIn).close();
     }
 
     @DisplayName("Tests if close() method closes all required resources")
@@ -52,12 +50,14 @@ public class WebClientTest {
 
         Socket mockSocket = mocksContainer.getMockSocket();
         PrintWriter mockSocketOut = mocksContainer.getMockSocketOut();
+        PrintWriter mockUserOut = mocksContainer.getMockUserOut();
         BufferedReader mockUserIn = mocksContainer.getMockUserIn();
         BufferedReader mockSocketIn = mocksContainer.getMockSocketIn();
 
         verify(mockSocket).close();
         verify(mockSocketOut).close();
         verify(mockUserIn).close();
+        verify(mockUserOut).close();
         verify(mockSocketIn).close();
     }
 
