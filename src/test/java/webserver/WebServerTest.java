@@ -18,12 +18,13 @@ public class WebServerTest {
     @Test
     void testWebServerReadWriteClose() throws Exception {
         MockContainer mockContainer = getNewServerMockContainer();
-        Socket mockSocket = getMockSocket();
-        BufferedReader mockSocketIn = getMockSocketIn();
-        PrintWriter mockSocketOut = getMockSocketOut();
         webServer = getStubbedWebServer(mockContainer);
 
         webServer.start();
+
+        Socket mockSocket = mockContainer.getMockSocket();
+        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
+        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
 
         verify(mockSocketIn, times(3)).readLine();
         verify(mockSocketOut).println("First message");
