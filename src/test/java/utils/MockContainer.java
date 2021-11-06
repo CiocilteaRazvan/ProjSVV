@@ -25,12 +25,13 @@ public class MockContainer {
 
     public MockContainer(Socket mockSocket,
                          BufferedReader mockSocketIn,
-                         PrintWriter mockSocketOut) {
+                         PrintWriter mockSocketOut,
+                         PrintWriter mockLogOut) {
         this.mockSocket = mockSocket;
         this.mockSocketIn = mockSocketIn;
         this.mockSocketOut = mockSocketOut;
         this.mockUserIn = null;
-        this.mockUserOut = null;
+        this.mockUserOut = mockLogOut;
     }
 
     public Socket getMockSocket() {
