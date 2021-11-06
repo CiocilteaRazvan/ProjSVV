@@ -4,18 +4,18 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class MockContainer {
+public class ServerMockContainer {
     private Socket mockSocket;
     private BufferedReader mockUserIn;
     private PrintWriter mockUserOut;
     private BufferedReader mockSocketIn;
     private PrintWriter mockSocketOut;
 
-    public MockContainer(Socket mockSocket,
-                         BufferedReader mockUserIn,
-                         PrintWriter mockUserOut,
-                         BufferedReader mockSocketIn,
-                         PrintWriter mockSocketOut) {
+    public ServerMockContainer(Socket mockSocket,
+                               BufferedReader mockUserIn,
+                               PrintWriter mockUserOut,
+                               BufferedReader mockSocketIn,
+                               PrintWriter mockSocketOut) {
         this.mockSocket = mockSocket;
         this.mockUserIn = mockUserIn;
         this.mockUserOut = mockUserOut;
@@ -23,10 +23,10 @@ public class MockContainer {
         this.mockSocketOut = mockSocketOut;
     }
 
-    public MockContainer(Socket mockSocket,
-                         BufferedReader mockSocketIn,
-                         PrintWriter mockSocketOut,
-                         PrintWriter mockLogOut) {
+    public ServerMockContainer(Socket mockSocket,
+                               BufferedReader mockSocketIn,
+                               PrintWriter mockSocketOut,
+                               PrintWriter mockLogOut) {
         this.mockSocket = mockSocket;
         this.mockSocketIn = mockSocketIn;
         this.mockSocketOut = mockSocketOut;
