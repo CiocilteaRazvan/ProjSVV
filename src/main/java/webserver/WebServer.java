@@ -43,6 +43,7 @@ public class WebServer{
 	protected void close() throws IOException{
 		socketOut.close();
 		socketIn.close();
+		logOut.close();
 		socket.close();
 	}
 

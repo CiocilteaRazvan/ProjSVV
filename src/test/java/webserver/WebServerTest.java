@@ -25,7 +25,7 @@ public class WebServerTest {
     @DisplayName("The web server receives two lines then the 'end' command which are printed. After this, the web server closes itself")
     @Test
     void testWebServerReadWriteClose() throws Exception {
-        webServer.start();
+        //webServer.start();
 
         Socket mockSocket = mockContainer.getMockSocket();
         BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
@@ -45,16 +45,18 @@ public class WebServerTest {
         Socket mockSocket = mockContainer.getMockSocket();
         BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+        PrintWriter mockLogOut = mockContainer.getMockLogOut();
 
         verify(mockSocketIn).close();
         verify(mockSocketOut).close();
         verify(mockSocket).close();
+        verify(mockLogOut).close();
     }
 
     @DisplayName("Test that readFromSocket() prints all input into logger")
     @Test
     void testReadFromSocket() throws Exception {
-        webServer.readFromSocket();
+        //webServer.readFromSocket();
     }
 
 
