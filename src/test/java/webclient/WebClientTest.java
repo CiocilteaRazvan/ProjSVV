@@ -70,11 +70,8 @@ public class WebClientTest {
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
 
         InOrder inOrder = inOrder(mockUserIn, mockSocketOut);
-        inOrder.verify(mockUserIn).readLine();
         inOrder.verify(mockSocketOut).println("First Message");
-        inOrder.verify(mockUserIn).readLine();
         inOrder.verify(mockSocketOut).println("Second Message");
-        inOrder.verify(mockUserIn).readLine();
         inOrder.verify(mockSocketOut).println(Commands.END_CONNECTION);
     }
 
@@ -83,15 +80,13 @@ public class WebClientTest {
     void testWriteSocketToUser() throws Exception {
         String response = webClient.writeSocketToUser();
 
-        String expected = "a.html\n";
+        String expected = "a.html;\n";
         assertEquals(expected, response);
 
         BufferedReader socketIn = mockContainer.getMockSocketIn();
         PrintWriter userOut = mockContainer.getMockUserOut();
         InOrder inOrder = inOrder(socketIn, userOut);
-        inOrder.verify(socketIn).readLine();
-        inOrder.verify(userOut).println("a.html");
-        inOrder.verify(socketIn).readLine();
+        inOrder.verify(userOut).println("a.html;");
         inOrder.verify(userOut).println(Commands.END_CONNECTION);
     }
 
@@ -129,7 +124,7 @@ public class WebClientTest {
     private BufferedReader getMockSocketIn() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
-                .thenReturn("a.html")
+                .thenReturn("a.html;")
                 .thenReturn(Commands.END_CONNECTION);
 
         return mockBufferedReader;
