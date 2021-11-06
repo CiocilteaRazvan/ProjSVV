@@ -63,7 +63,7 @@ public class WebServerTest {
 
 
 
-    private Socket getMockSocket() throws IOException {
+    private Socket getMockSocket() {
         return mock(Socket.class);
     }
 
@@ -81,7 +81,7 @@ public class WebServerTest {
         return mockBufferedReader;
     }
 
-    private MockContainer getNewServerMockContainer() throws Exception {
+    private MockContainer getNewServerMockContainer() throws IOException {
         Socket mockSocket = getMockSocket();
         BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockOutStream();
@@ -97,7 +97,7 @@ public class WebServerTest {
     private WebServer getStubbedWebServer(MockContainer mockContainer) {
         return new WebServer(10008) {
             @Override
-            protected Socket getSocket (ServerSocket serverSocket) throws IOException {
+            protected Socket getSocket (ServerSocket serverSocket) {
                 return mockContainer.getMockSocket();
             }
 
@@ -113,7 +113,7 @@ public class WebServerTest {
 
             @Override
             protected PrintWriter getOutStreamLog() {
-                return mockContainer.getMockUserOut();
+                return mockContainer.getMockLogOut();
             }
         };
     }

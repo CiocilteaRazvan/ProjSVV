@@ -13,7 +13,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class WebClientTest {
@@ -98,7 +97,7 @@ public class WebClientTest {
 
     @DisplayName("Test if askForHtmlPages() sends correct commands to socket")
     @Test
-    void testAskForAvailableHtmlPages() throws Exception{
+    void testAskForAvailableHtmlPages() {
         webClient.askForAvailableHtmlPages();
 
         PrintWriter socketOut = mockContainer.getMockSocketOut();

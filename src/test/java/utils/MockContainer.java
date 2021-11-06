@@ -46,6 +46,10 @@ public class MockContainer {
         return mockUserOut;
     }
 
+    public PrintWriter getMockLogOut() {
+        return mockUserOut;
+    }
+
     public BufferedReader getMockSocketIn() {
         return mockSocketIn;
     }
