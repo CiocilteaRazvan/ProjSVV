@@ -15,10 +15,10 @@ public class WebServerTest {
 
     @DisplayName("The web server receives two lines then the 'end' command which are printed. After this, the web server closes itself")
     @Test
-    void testWebServerReadWriteClose() throws Exception{
-        BufferedReader mockBufferedReader = getMockBufferedReaderThreeLines();
-        PrintWriter mockPrintWriter = getMockPrintWriter();
+    void testWebServerReadWriteClose() throws Exception {
         Socket mockSocket = getMockSocket();
+        BufferedReader mockSocketIn = getMockSocketIn();
+        PrintWriter mockSocketOut = getMockSocketOut();
         webServer = new WebServer(9999) {
             @Override
             protected Socket getSocket (ServerSocket serverSocket) throws IOException {
@@ -27,23 +27,23 @@ public class WebServerTest {
 
             @Override
             protected BufferedReader getInStream() throws IOException {
-                return mockBufferedReader;
+                return mockSocketIn;
             }
 
             @Override
             protected PrintWriter getOutStream() throws IOException {
-                return mockPrintWriter;
+                return mockSocketOut;
             }
         };
 
         webServer.start();
 
-        verify(mockBufferedReader, times(3)).readLine();
-        verify(mockPrintWriter).println("First message");
-        verify(mockPrintWriter).println("Second message");
-        verify(mockPrintWriter).println(Commands.END_MESSAGE);
-        verify(mockBufferedReader, times(1)).close();
-        verify(mockPrintWriter, times(1)).close();
+        verify(mockSocketIn, times(3)).readLine();
+        verify(mockSocketOut).println("First message");
+        verify(mockSocketOut).println("Second message");
+        verify(mockSocketOut).println(Commands.END_MESSAGE);
+        verify(mockSocketIn, times(1)).close();
+        verify(mockSocketOut, times(1)).close();
         verify(mockSocket, times(1)).close();
     }
 
@@ -51,11 +51,11 @@ public class WebServerTest {
         return mock(Socket.class);
     }
 
-    private PrintWriter getMockPrintWriter() {
+    private PrintWriter getMockSocketOut() {
         return mock(PrintWriter.class);
     }
 
-    private BufferedReader getMockBufferedReaderThreeLines() throws IOException {
+    private BufferedReader getMockSocketIn() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
                 .thenReturn("First message")
