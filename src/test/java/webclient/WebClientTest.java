@@ -1,5 +1,6 @@
 package webclient;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -16,15 +17,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class WebClientTest {
+    private MockContainer mockContainer;
     private WebClient webClient;
+
+    @BeforeEach
+    void init() throws Exception{
+        mockContainer = getNewClientMockContainer();
+        webClient = getStubbedWebClient(mockContainer);
+    }
 
     @DisplayName("Test that the start method closes all required resources when finished")
     @Test
     void testStart() throws Exception {
-        MockContainer mockContainer = getNewClientMockContainer();
-
-        webClient = getStubbedWebClient(mockContainer);
-
         webClient.start();
 
         Socket mockSocket = mockContainer.getMockSocket();
@@ -43,9 +47,6 @@ public class WebClientTest {
     @DisplayName("Tests if close() method closes all required resources")
     @Test
     void testClose() throws Exception{
-        MockContainer mockContainer = getNewClientMockContainer();
-
-        webClient = getStubbedWebClient(mockContainer);
         webClient.close();
 
         Socket mockSocket = mockContainer.getMockSocket();
@@ -64,9 +65,6 @@ public class WebClientTest {
     @DisplayName("Test if writeUserToSocket() prints from user input to socket output")
     @Test
     void testWriteUserToSocket() throws Exception {
-        MockContainer mockContainer = getNewClientMockContainer();
-
-        webClient = getStubbedWebClient(mockContainer);
         webClient.writeUserToSocket();
 
         BufferedReader mockUserIn = mockContainer.getMockUserIn();
@@ -84,9 +82,6 @@ public class WebClientTest {
     @DisplayName("Test if readFromSocket() prints from socket input to user output and returns correct String")
     @Test
     void testWriteSocketToUser() throws Exception {
-        MockContainer mockContainer = getNewClientMockContainer();
-
-        webClient = getStubbedWebClient(mockContainer);
         String response = webClient.writeSocketToUser();
 
         String expected = "a.html\n";
@@ -104,9 +99,6 @@ public class WebClientTest {
     @DisplayName("Test if askForHtmlPages() sends correct commands to socket")
     @Test
     void testAskForAvailableHtmlPages() throws Exception{
-        MockContainer mockContainer = getNewClientMockContainer();
-
-        webClient = getStubbedWebClient(mockContainer);
         webClient.askForAvailableHtmlPages();
 
         PrintWriter socketOut = mockContainer.getMockSocketOut();
