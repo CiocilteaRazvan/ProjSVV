@@ -3,7 +3,7 @@ package webclient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
-import utils.ClientMocksContainer;
+import utils.MocksContainer;
 import utils.Commands;
 
 import java.io.BufferedReader;
@@ -21,7 +21,7 @@ public class WebClientTest {
     @DisplayName("Test that the start method closes all required resources when finished")
     @Test
     void testStart() throws Exception {
-        ClientMocksContainer mocksContainer = getNewClientMocksContainer();
+        MocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
 
@@ -43,7 +43,7 @@ public class WebClientTest {
     @DisplayName("Tests if close() method closes all required resources")
     @Test
     void testClose() throws Exception{
-        ClientMocksContainer mocksContainer = getNewClientMocksContainer();
+        MocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
         webClient.close();
@@ -64,7 +64,7 @@ public class WebClientTest {
     @DisplayName("Test if writeUserToSocket() prints from user input to socket output")
     @Test
     void testWriteUserToSocket() throws Exception {
-        ClientMocksContainer mocksContainer = getNewClientMocksContainer();
+        MocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
         webClient.writeUserToSocket();
@@ -84,7 +84,7 @@ public class WebClientTest {
     @DisplayName("Test if readFromSocket() prints from socket input to user output and returns correct String")
     @Test
     void testWriteSocketToUser() throws Exception {
-        ClientMocksContainer mocksContainer = getNewClientMocksContainer();
+        MocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
         String response = webClient.writeSocketToUser();
@@ -104,7 +104,7 @@ public class WebClientTest {
     @DisplayName("Test if askForHtmlPages() sends correct commands to socket")
     @Test
     void testAskForAvailableHtmlPages() throws Exception{
-        ClientMocksContainer mocksContainer = getNewClientMocksContainer();
+        MocksContainer mocksContainer = getNewClientMocksContainer();
 
         webClient = getStubbedWebClient(mocksContainer);
         webClient.askForAvailableHtmlPages();
@@ -148,14 +148,14 @@ public class WebClientTest {
         return mock(Socket.class);
     }
 
-    private ClientMocksContainer getNewClientMocksContainer() throws IOException {
+    private MocksContainer getNewClientMocksContainer() throws IOException {
         Socket mockSocket = getMockSocket();
         BufferedReader mockUserIn = getMockUserIn();
         PrintWriter mockUserOut = getMockOutStream();
         BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockOutStream();
 
-        return new ClientMocksContainer(
+        return new MocksContainer(
                 mockSocket,
                 mockUserIn,
                 mockUserOut,
@@ -163,7 +163,7 @@ public class WebClientTest {
                 mockSocketOut);
     }
 
-    private WebClient getStubbedWebClient(ClientMocksContainer mocksContainer) {
+    private WebClient getStubbedWebClient(MocksContainer mocksContainer) {
         return new WebClient("127.0.0.1", 10008) {
             @Override
             protected Socket getSocket(String address, int portNumber) {

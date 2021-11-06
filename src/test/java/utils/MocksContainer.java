@@ -4,18 +4,18 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientMocksContainer {
+public class MocksContainer {
     private Socket mockSocket;
     private BufferedReader mockUserIn;
     private PrintWriter mockUserOut;
     private BufferedReader mockSocketIn;
     private PrintWriter mockSocketOut;
 
-    public ClientMocksContainer(Socket mockSocket,
-                                BufferedReader mockUserIn,
-                                PrintWriter mockUserOut,
-                                BufferedReader mockSocketIn,
-                                PrintWriter mockSocketOut) {
+    public MocksContainer(Socket mockSocket,
+                          BufferedReader mockUserIn,
+                          PrintWriter mockUserOut,
+                          BufferedReader mockSocketIn,
+                          PrintWriter mockSocketOut) {
         this.mockSocket = mockSocket;
         this.mockUserIn = mockUserIn;
         this.mockUserOut = mockUserOut;
