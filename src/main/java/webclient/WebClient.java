@@ -28,9 +28,8 @@ public class WebClient {
     }
 
     public void start() throws IOException {
-        askForAvailableHtmlPages();
-        writeSocketToUser();
         writeUserToSocket();
+        writeSocketToUser();
         close();
     }
 

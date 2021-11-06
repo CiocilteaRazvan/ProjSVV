@@ -6,6 +6,7 @@ public class Main {
         Thread serverThread = new Thread(new ServerRunner());
         Thread clientThread = new Thread(new ClientRunner());
 
+        //TODO FIXIT server does not print to System.out messages from client
         serverThread.start();
         clientThread.start();
     }
