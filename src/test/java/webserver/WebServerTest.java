@@ -1,5 +1,6 @@
 package webserver;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utils.Commands;
@@ -12,14 +13,18 @@ import java.net.Socket;
 import static org.mockito.Mockito.*;
 
 public class WebServerTest {
+    private MockContainer mockContainer;
     private WebServer webServer;
+
+    @BeforeEach
+    void init() throws Exception{
+        mockContainer = getNewServerMockContainer();
+        webServer = getStubbedWebServer(mockContainer);
+    }
 
     @DisplayName("The web server receives two lines then the 'end' command which are printed. After this, the web server closes itself")
     @Test
     void testWebServerReadWriteClose() throws Exception {
-        MockContainer mockContainer = getNewServerMockContainer();
-        webServer = getStubbedWebServer(mockContainer);
-
         webServer.start();
 
         Socket mockSocket = mockContainer.getMockSocket();
@@ -34,6 +39,12 @@ public class WebServerTest {
         verify(mockSocketOut, times(1)).close();
         verify(mockSocket, times(1)).close();
     }
+
+
+
+    //=================================== UTILS ===================================//
+
+
 
     private Socket getMockSocket() throws IOException {
         return mock(Socket.class);
