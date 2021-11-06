@@ -1,6 +1,5 @@
 package webserver;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -17,15 +16,10 @@ public class WebServerTest {
     private ServerMockContainer mockContainer;
     private WebServer webServer;
 
-    @BeforeEach
-    void init() throws Exception{
-        mockContainer = getNewServerMockContainer();
-        webServer = getStubbedWebServer(mockContainer);
-    }
-
     @DisplayName("Test that the start() method closes all required resources when done")
     @Test
     void testStart() throws Exception {
+        webServer = getWebServerWithInput(twoRandMessages());
         webServer.start();
 
         ServerSocket mockServerSocket = mockContainer.getMockServerSocket();
@@ -88,6 +82,11 @@ public class WebServerTest {
 
 
 
+    WebServer getWebServerWithInput(BufferedReader mockSocketIn) throws Exception{
+        mockContainer = getServerMockContainerWithInput(mockSocketIn);
+        return getStubbedWebServer(mockContainer);
+    }
+
     private ServerSocket getMockServerSocket() {
         return mock(ServerSocket.class);
     }
@@ -100,7 +99,7 @@ public class WebServerTest {
         return mock(PrintWriter.class);
     }
 
-    private BufferedReader getMockSocketIn() throws IOException {
+    private BufferedReader twoRandMessages() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
                 .thenReturn("First message")
@@ -110,10 +109,18 @@ public class WebServerTest {
         return mockBufferedReader;
     }
 
-    private ServerMockContainer getNewServerMockContainer() throws IOException {
+    private BufferedReader requestAvailableHtmlFiles() throws IOException {
+        BufferedReader mockBufferedReader = mock(BufferedReader.class);
+        when(mockBufferedReader.readLine())
+                .thenReturn(Commands.REQUEST_AVAILABLE_HTML_FILES)
+                .thenReturn(Commands.END_CONNECTION);
+
+        return mockBufferedReader;
+    }
+
+    private ServerMockContainer getServerMockContainerWithInput(BufferedReader mockSocketIn) throws IOException {
         ServerSocket mockServerSocket = getMockServerSocket();
         Socket mockSocket = getMockSocket();
-        BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockOutStream();
         PrintWriter mockLogOut = getMockOutStream();
 
