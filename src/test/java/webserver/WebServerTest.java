@@ -35,9 +35,20 @@ public class WebServerTest {
         verify(mockSocketOut).println("First message");
         verify(mockSocketOut).println("Second message");
         verify(mockSocketOut).println(Commands.END_MESSAGE);
-        verify(mockSocketIn, times(1)).close();
-        verify(mockSocketOut, times(1)).close();
-        verify(mockSocket, times(1)).close();
+    }
+
+    @DisplayName("Test that the close() method closes all required resources")
+    @Test
+    void testClose() throws Exception{
+        webServer.close();
+
+        Socket mockSocket = mockContainer.getMockSocket();
+        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
+        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+
+        verify(mockSocketIn).close();
+        verify(mockSocketOut).close();
+        verify(mockSocket).close();
     }
 
 
