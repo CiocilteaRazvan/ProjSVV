@@ -105,7 +105,7 @@ public class WebServerTest {
             }
 
             @Override
-            protected PrintWriter getOutStream() throws IOException {
+            protected PrintWriter getOutStreamSocket() throws IOException {
                 return mockContainer.getMockSocketOut();
             }
         };

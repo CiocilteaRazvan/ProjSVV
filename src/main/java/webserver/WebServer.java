@@ -17,7 +17,7 @@ public class WebServer{
 			this.socket = getSocket(serverSocket);
 
 			socketIn = getInStream();
-			socketOut = getOutStream();
+			socketOut = getOutStreamSocket();
 			logOut = getOutStreamLog();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -54,7 +54,7 @@ public class WebServer{
 		return new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 
-	protected PrintWriter getOutStream() throws IOException {
+	protected PrintWriter getOutStreamSocket() throws IOException {
 		return new PrintWriter(socket.getOutputStream(), true);
 	}
 
