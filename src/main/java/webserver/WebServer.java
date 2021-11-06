@@ -27,7 +27,7 @@ public class WebServer{
 		close();
 	}
 
-	private void readFromSocket() throws IOException {
+	protected void readFromSocket() throws IOException {
 		String inputLine;
 		while ((inputLine = socketIn.readLine()) != null) {
 			System.out.println("Server: " + inputLine);
@@ -38,7 +38,7 @@ public class WebServer{
 		}
 	}
 
-	private void close() throws IOException{
+	protected void close() throws IOException{
 		socketOut.close();
 		socketIn.close();
 		socket.close();
