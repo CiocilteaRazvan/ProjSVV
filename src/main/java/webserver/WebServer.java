@@ -15,10 +15,9 @@ public class WebServer{
 		try {
 			ServerSocket serverSocket = getServerSocket(portNumber);
 			this.socket = getSocket(serverSocket);
-
-			socketIn = getInStream();
-			socketOut = getOutStreamSocket();
-			logOut = getOutStreamLog();
+			this.socketIn = getInStream();
+			this.socketOut = getOutStreamSocket();
+			this.logOut = getOutStreamLog();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

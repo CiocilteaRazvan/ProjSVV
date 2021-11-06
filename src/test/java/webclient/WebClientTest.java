@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
+import utils.ClientMockContainer;
 import utils.MockContainer;
 import utils.Commands;
 
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class WebClientTest {
-    private MockContainer mockContainer;
+    private ClientMockContainer mockContainer;
     private WebClient webClient;
 
     @BeforeEach
@@ -139,14 +140,14 @@ public class WebClientTest {
         return mock(Socket.class);
     }
 
-    private MockContainer getNewClientMockContainer() throws IOException {
+    private ClientMockContainer getNewClientMockContainer() throws IOException {
         Socket mockSocket = getMockSocket();
         BufferedReader mockUserIn = getMockUserIn();
         PrintWriter mockUserOut = getMockOutStream();
         BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockOutStream();
 
-        return new MockContainer(
+        return new ClientMockContainer(
                 mockSocket,
                 mockUserIn,
                 mockUserOut,
@@ -154,7 +155,7 @@ public class WebClientTest {
                 mockSocketOut);
     }
 
-    private WebClient getStubbedWebClient(MockContainer mockContainer) {
+    private WebClient getStubbedWebClient(ClientMockContainer mockContainer) {
         return new WebClient("127.0.0.1", 10008) {
             @Override
             protected Socket getSocket(String address, int portNumber) {

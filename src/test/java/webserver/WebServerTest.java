@@ -3,6 +3,7 @@ package webserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import utils.Commands;
 import utils.MockContainer;
 
@@ -22,20 +23,20 @@ public class WebServerTest {
         webServer = getStubbedWebServer(mockContainer);
     }
 
-    @DisplayName("The web server receives two lines then the 'end' command which are printed. After this, the web server closes itself")
-    @Test
-    void testWebServerReadWriteClose() throws Exception {
-        //webServer.start();
-
-        Socket mockSocket = mockContainer.getMockSocket();
-        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
-        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
-
-        verify(mockSocketIn, times(3)).readLine();
-        verify(mockSocketOut).println("First message");
-        verify(mockSocketOut).println("Second message");
-        verify(mockSocketOut).println(Commands.END_MESSAGE);
-    }
+//    @DisplayName("The web server receives two lines then the 'end' command which are printed. After this, the web server closes itself")
+//    @Test
+//    void testWebServerReadWriteClose() throws Exception {
+//        webServer.start();
+//
+//        Socket mockSocket = mockContainer.getMockSocket();
+//        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
+//        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+//
+//        verify(mockSocketIn, times(3)).readLine();
+//        verify(mockSocketOut).println("First message");
+//        verify(mockSocketOut).println("Second message");
+//        verify(mockSocketOut).println(Commands.END_MESSAGE);
+//    }
 
     @DisplayName("Test that the close() closes all required resources")
     @Test
@@ -56,7 +57,18 @@ public class WebServerTest {
     @DisplayName("Test that readFromSocket() prints all input into logger")
     @Test
     void testReadFromSocket() throws Exception {
-        //webServer.readFromSocket();
+        webServer.readFromSocket();
+
+        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
+        PrintWriter mockLogOut = mockContainer.getMockLogOut();
+
+        InOrder inOrder = inOrder(mockSocketIn, mockLogOut);
+        inOrder.verify(mockSocketIn).readLine();
+        inOrder.verify(mockLogOut).println("Input: First message");
+        inOrder.verify(mockSocketIn).readLine();
+        inOrder.verify(mockLogOut).println("Input: Second message");
+        inOrder.verify(mockSocketIn).readLine();
+        inOrder.verify(mockLogOut).println("Input: " + Commands.END_MESSAGE);
     }
 
 
