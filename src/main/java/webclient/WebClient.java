@@ -39,7 +39,7 @@ public class WebClient {
         while ((line = userIn.readLine()) != null) {
             socketOut.println(line);
 
-            if (line.equals(Commands.END_MESSAGE))
+            if (line.equals(Commands.END_CONNECTION))
                 break;
         }
     }
@@ -49,7 +49,7 @@ public class WebClient {
         String line;
         while ((line = socketIn.readLine()) != null) {
             userOut.println(line);
-            if (line.equals(Commands.END_MESSAGE))
+            if (line.equals(Commands.END_CONNECTION))
                 break;
             response += line + "\n";
         }
@@ -59,7 +59,7 @@ public class WebClient {
 
     protected void askForAvailableHtmlPages() {
         socketOut.println(Commands.REQUEST_AVAILABLE_HTML_FILES);
-        socketOut.println(Commands.END_MESSAGE);
+        socketOut.println(Commands.END_CONNECTION);
     }
 
     protected void close() throws IOException{

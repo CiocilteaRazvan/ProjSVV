@@ -73,9 +73,18 @@ public class WebServerTest {
         inOrder.verify(mockSocketIn).readLine();
         inOrder.verify(mockLogOut).println("Input: Second message");
         inOrder.verify(mockSocketIn).readLine();
-        inOrder.verify(mockLogOut).println("Input: " + Commands.END_MESSAGE);
+        inOrder.verify(mockLogOut).println("Input: " + Commands.END_CONNECTION);
     }
 
+    @DisplayName("Test that readFromSocket() returns html file options when REQUEST_AVAILABLE_HTML_FILES command is called")
+    @Test
+    void testReadFromSocketRequestAvailableHtmlFiles() throws Exception{
+        webServer.readFromSocket();
+
+        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+
+        verify(mockSocketOut).println("a.html;");
+    }
 
 
     //=================================== UTILS ===================================//
@@ -99,7 +108,7 @@ public class WebServerTest {
         when(mockBufferedReader.readLine())
                 .thenReturn("First message")
                 .thenReturn("Second message")
-                .thenReturn(Commands.END_MESSAGE);
+                .thenReturn(Commands.END_CONNECTION);
 
         return mockBufferedReader;
     }

@@ -35,7 +35,7 @@ public class WebServer{
 			logOut.println("Input: " + inputLine);
 			socketOut.println(inputLine);
 
-			if (inputLine.trim().equals(Commands.END_MESSAGE))
+			if (inputLine.trim().equals(Commands.END_CONNECTION))
 				break;
 		}
 	}

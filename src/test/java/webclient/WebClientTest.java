@@ -75,7 +75,7 @@ public class WebClientTest {
         inOrder.verify(mockUserIn).readLine();
         inOrder.verify(mockSocketOut).println("Second Message");
         inOrder.verify(mockUserIn).readLine();
-        inOrder.verify(mockSocketOut).println(Commands.END_MESSAGE);
+        inOrder.verify(mockSocketOut).println(Commands.END_CONNECTION);
     }
 
     @DisplayName("Test if readFromSocket() prints from socket input to user output and returns correct String")
@@ -92,7 +92,7 @@ public class WebClientTest {
         inOrder.verify(socketIn).readLine();
         inOrder.verify(userOut).println("a.html");
         inOrder.verify(socketIn).readLine();
-        inOrder.verify(userOut).println(Commands.END_MESSAGE);
+        inOrder.verify(userOut).println(Commands.END_CONNECTION);
     }
 
     @DisplayName("Test if askForHtmlPages() sends correct commands to socket")
@@ -103,7 +103,7 @@ public class WebClientTest {
         PrintWriter socketOut = mockContainer.getMockSocketOut();
         InOrder inOrder = inOrder(socketOut);
         inOrder.verify(socketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
-        inOrder.verify(socketOut).println(Commands.END_MESSAGE);
+        inOrder.verify(socketOut).println(Commands.END_CONNECTION);
     }
 
 
@@ -121,7 +121,7 @@ public class WebClientTest {
         when(mockBufferedReader.readLine())
                 .thenReturn("First Message")
                 .thenReturn("Second Message")
-                .thenReturn(Commands.END_MESSAGE);
+                .thenReturn(Commands.END_CONNECTION);
 
         return mockBufferedReader;
     }
@@ -130,7 +130,7 @@ public class WebClientTest {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
                 .thenReturn("a.html")
-                .thenReturn(Commands.END_MESSAGE);
+                .thenReturn(Commands.END_CONNECTION);
 
         return mockBufferedReader;
     }
