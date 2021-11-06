@@ -9,6 +9,7 @@ public class WebServer{
 	private Socket socket;
 	private BufferedReader socketIn;
 	private PrintWriter socketOut;
+	private PrintWriter logOut;
 
 	public WebServer(int portNumber) {
 		try {
@@ -17,6 +18,7 @@ public class WebServer{
 
 			socketIn = getInStream();
 			socketOut = getOutStream();
+			logOut = getOutStreamLog();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -30,7 +32,7 @@ public class WebServer{
 	protected void readFromSocket() throws IOException {
 		String inputLine;
 		while ((inputLine = socketIn.readLine()) != null) {
-			System.out.println("Server: " + inputLine);
+			logOut.println("Input: " + inputLine);
 			socketOut.println(inputLine);
 
 			if (inputLine.trim().equals(Commands.END_MESSAGE))
@@ -54,6 +56,10 @@ public class WebServer{
 
 	protected PrintWriter getOutStream() throws IOException {
 		return new PrintWriter(socket.getOutputStream(), true);
+	}
+
+	protected PrintWriter getOutStreamLog() {
+		return new PrintWriter(System.out);
 	}
 
 	protected ServerSocket getServerSocket(int portNumber) throws IOException {
