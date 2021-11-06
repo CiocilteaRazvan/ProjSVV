@@ -14,43 +14,48 @@ import java.net.Socket;
 import static org.mockito.Mockito.*;
 
 public class WebServerTest {
-    private ServerMockContainer serverMockContainer;
+    private ServerMockContainer mockContainer;
     private WebServer webServer;
 
     @BeforeEach
     void init() throws Exception{
-        serverMockContainer = getNewServerMockContainer();
-        webServer = getStubbedWebServer(serverMockContainer);
+        mockContainer = getNewServerMockContainer();
+        webServer = getStubbedWebServer(mockContainer);
     }
 
-//    @DisplayName("The web server receives two lines then the 'end' command which are printed. After this, the web server closes itself")
-//    @Test
-//    void testWebServerReadWriteClose() throws Exception {
-//        webServer.start();
-//
-//        Socket mockSocket = mockContainer.getMockSocket();
-//        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
-//        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
-//
-//        verify(mockSocketIn, times(3)).readLine();
-//        verify(mockSocketOut).println("First message");
-//        verify(mockSocketOut).println("Second message");
-//        verify(mockSocketOut).println(Commands.END_MESSAGE);
-//    }
+    @DisplayName("Test that the start() method closes all required resources when done")
+    @Test
+    void testStart() throws Exception {
+        webServer.start();
+
+        ServerSocket mockServerSocket = mockContainer.getMockServerSocket();
+        Socket mockSocket = mockContainer.getMockSocket();
+        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
+        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+        PrintWriter mockLogOut = mockContainer.getMockLogOut();
+
+        verify(mockServerSocket).close();
+        verify(mockSocket).close();
+        verify(mockSocketIn).close();
+        verify(mockSocketOut).close();
+        verify(mockLogOut).close();
+    }
 
     @DisplayName("Test that the close() closes all required resources")
     @Test
     void testClose() throws Exception {
         webServer.close();
 
-        Socket mockSocket = serverMockContainer.getMockSocket();
-        BufferedReader mockSocketIn = serverMockContainer.getMockSocketIn();
-        PrintWriter mockSocketOut = serverMockContainer.getMockSocketOut();
-        PrintWriter mockLogOut = serverMockContainer.getMockLogOut();
+        ServerSocket mockServerSocket = mockContainer.getMockServerSocket();
+        Socket mockSocket = mockContainer.getMockSocket();
+        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
+        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+        PrintWriter mockLogOut = mockContainer.getMockLogOut();
 
+        verify(mockServerSocket).close();
+        verify(mockSocket).close();
         verify(mockSocketIn).close();
         verify(mockSocketOut).close();
-        verify(mockSocket).close();
         verify(mockLogOut).close();
     }
 
@@ -59,8 +64,8 @@ public class WebServerTest {
     void testReadFromSocket() throws Exception {
         webServer.readFromSocket();
 
-        BufferedReader mockSocketIn = serverMockContainer.getMockSocketIn();
-        PrintWriter mockLogOut = serverMockContainer.getMockLogOut();
+        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
+        PrintWriter mockLogOut = mockContainer.getMockLogOut();
 
         InOrder inOrder = inOrder(mockSocketIn, mockLogOut);
         inOrder.verify(mockSocketIn).readLine();
@@ -76,6 +81,10 @@ public class WebServerTest {
     //=================================== UTILS ===================================//
 
 
+
+    private ServerSocket getMockServerSocket() {
+        return mock(ServerSocket.class);
+    }
 
     private Socket getMockSocket() {
         return mock(Socket.class);
@@ -96,12 +105,14 @@ public class WebServerTest {
     }
 
     private ServerMockContainer getNewServerMockContainer() throws IOException {
+        ServerSocket mockServerSocket = getMockServerSocket();
         Socket mockSocket = getMockSocket();
         BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockOutStream();
         PrintWriter mockLogOut = getMockOutStream();
 
         return new ServerMockContainer(
+                mockServerSocket,
                 mockSocket,
                 mockSocketIn,
                 mockSocketOut,
@@ -110,6 +121,11 @@ public class WebServerTest {
 
     private WebServer getStubbedWebServer(ServerMockContainer serverMockContainer) {
         return new WebServer(10008) {
+            @Override
+            protected ServerSocket getServerSocket(int portNumber) {
+                return serverMockContainer.getMockServerSocket();
+            }
+
             @Override
             protected Socket getSocket (ServerSocket serverSocket) {
                 return serverMockContainer.getMockSocket();

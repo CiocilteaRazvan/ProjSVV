@@ -6,6 +6,7 @@ import java.net.*;
 import java.io.*;
 
 public class WebServer{
+	private ServerSocket serverSocket;
 	private Socket socket;
 	private BufferedReader socketIn;
 	private PrintWriter socketOut;
@@ -13,7 +14,7 @@ public class WebServer{
 
 	public WebServer(int portNumber) {
 		try {
-			ServerSocket serverSocket = getServerSocket(portNumber);
+			this.serverSocket = getServerSocket(portNumber);
 			this.socket = getSocket(serverSocket);
 			this.socketIn = getInStream();
 			this.socketOut = getOutStreamSocket();
@@ -44,6 +45,7 @@ public class WebServer{
 		socketIn.close();
 		logOut.close();
 		socket.close();
+		serverSocket.close();
 	}
 
 	protected Socket getSocket(ServerSocket serverSocket) throws IOException {
