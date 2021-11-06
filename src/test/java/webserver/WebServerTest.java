@@ -63,9 +63,10 @@ public class WebServerTest {
         BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
         PrintWriter mockLogOut = mockContainer.getMockLogOut();
 
-        InOrder inOrder = inOrder(mockSocketIn, mockLogOut);
-        inOrder.verify(mockLogOut).println("Input: First message");
-        inOrder.verify(mockLogOut).println("Input: Second message");
+        InOrder inOrder = inOrder(mockLogOut);
+        inOrder.verify(mockLogOut).println("Input: First random message");
+        inOrder.verify(mockLogOut).println("Input: " + Commands.REQUEST_AVAILABLE_HTML_FILES);
+        inOrder.verify(mockLogOut).println("Input: Second random message");
         inOrder.verify(mockLogOut).println("Input: " + Commands.END_CONNECTION);
     }
 

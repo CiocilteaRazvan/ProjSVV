@@ -32,12 +32,26 @@ public class WebServer{
 	protected void readFromSocket() throws IOException {
 		String inputLine;
 		while ((inputLine = socketIn.readLine()) != null) {
+			boolean endConnection = false;
 			logOut.println("Input: " + inputLine);
-			socketOut.println(inputLine);
 
-			if (inputLine.trim().equals(Commands.END_CONNECTION))
+			switch(inputLine){
+				case Commands.REQUEST_AVAILABLE_HTML_FILES:
+					socketOut.println(getAvailableHtmlFiles());
+					break;
+
+				case Commands.END_CONNECTION:
+					endConnection = true;
+					break;
+			}
+
+			if(endConnection)
 				break;
 		}
+	}
+
+	private String getAvailableHtmlFiles() {
+		return "a.html;";
 	}
 
 	protected void close() throws IOException{

@@ -69,7 +69,7 @@ public class WebClientTest {
         BufferedReader mockUserIn = mockContainer.getMockUserIn();
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
 
-        InOrder inOrder = inOrder(mockUserIn, mockSocketOut);
+        InOrder inOrder = inOrder(mockSocketOut);
         inOrder.verify(mockSocketOut).println("First Message");
         inOrder.verify(mockSocketOut).println("Second Message");
         inOrder.verify(mockSocketOut).println(Commands.END_CONNECTION);
@@ -85,7 +85,8 @@ public class WebClientTest {
 
         BufferedReader socketIn = mockContainer.getMockSocketIn();
         PrintWriter userOut = mockContainer.getMockUserOut();
-        InOrder inOrder = inOrder(socketIn, userOut);
+
+        InOrder inOrder = inOrder(userOut);
         inOrder.verify(userOut).println("a.html;");
         inOrder.verify(userOut).println(Commands.END_CONNECTION);
     }
