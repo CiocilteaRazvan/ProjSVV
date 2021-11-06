@@ -68,11 +68,8 @@ public class WebServerTest {
         PrintWriter mockLogOut = mockContainer.getMockLogOut();
 
         InOrder inOrder = inOrder(mockSocketIn, mockLogOut);
-        inOrder.verify(mockSocketIn).readLine();
         inOrder.verify(mockLogOut).println("Input: First message");
-        inOrder.verify(mockSocketIn).readLine();
         inOrder.verify(mockLogOut).println("Input: Second message");
-        inOrder.verify(mockSocketIn).readLine();
         inOrder.verify(mockLogOut).println("Input: " + Commands.END_CONNECTION);
     }
 
