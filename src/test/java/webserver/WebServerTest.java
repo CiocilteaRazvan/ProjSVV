@@ -38,6 +38,7 @@ public class WebServerTest {
     @DisplayName("Test that the close() closes all required resources")
     @Test
     void testClose() throws Exception {
+        webServer = getWebServerWithInput(twoRandMessages());
         webServer.close();
 
         ServerSocket mockServerSocket = mockContainer.getMockServerSocket();
@@ -56,6 +57,7 @@ public class WebServerTest {
     @DisplayName("Test that readFromSocket() prints all input into logger")
     @Test
     void testReadFromSocket() throws Exception {
+        webServer = getWebServerWithInput(twoRandMessages());
         webServer.readFromSocket();
 
         BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
@@ -70,6 +72,7 @@ public class WebServerTest {
     @DisplayName("Test that readFromSocket() returns html file options when REQUEST_AVAILABLE_HTML_FILES command is called")
     @Test
     void testReadFromSocketRequestAvailableHtmlFiles() throws Exception{
+        webServer = getWebServerWithInput(requestAvailableHtmlFiles());
         webServer.readFromSocket();
 
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
