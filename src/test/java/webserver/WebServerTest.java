@@ -67,7 +67,7 @@ public class WebServerTest {
         return mock(Socket.class);
     }
 
-    private PrintWriter getMockSocketOut() {
+    private PrintWriter getMockOutStream() {
         return mock(PrintWriter.class);
     }
 
@@ -84,8 +84,8 @@ public class WebServerTest {
     private MockContainer getNewServerMockContainer() throws Exception {
         Socket mockSocket = getMockSocket();
         BufferedReader mockSocketIn = getMockSocketIn();
-        PrintWriter mockSocketOut = getMockSocketOut();
-        PrintWriter mockLogOut = getMockSocketOut();
+        PrintWriter mockSocketOut = getMockOutStream();
+        PrintWriter mockLogOut = getMockOutStream();
 
         return new MockContainer(
                 mockSocket,
