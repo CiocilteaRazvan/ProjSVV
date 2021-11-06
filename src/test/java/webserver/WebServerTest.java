@@ -37,9 +37,9 @@ public class WebServerTest {
         verify(mockSocketOut).println(Commands.END_MESSAGE);
     }
 
-    @DisplayName("Test that the close() method closes all required resources")
+    @DisplayName("Test that the close() closes all required resources")
     @Test
-    void testClose() throws Exception{
+    void testClose() throws Exception {
         webServer.close();
 
         Socket mockSocket = mockContainer.getMockSocket();
@@ -49,6 +49,12 @@ public class WebServerTest {
         verify(mockSocketIn).close();
         verify(mockSocketOut).close();
         verify(mockSocket).close();
+    }
+
+    @DisplayName("Test that readFromSocket() prints all input into logger")
+    @Test
+    void testReadFromSocket() throws Exception {
+        webServer.readFromSocket();
     }
 
 
