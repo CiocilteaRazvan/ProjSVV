@@ -56,8 +56,8 @@ public class WebServerTest {
 
     @DisplayName("Test that readFromSocket() prints all input into logger")
     @Test
-    void testReadFromSocket() throws Exception {
-        webServer = getWebServerWithInput(twoRandMessages());
+    void testReadFromSocketPrintsToLog() throws Exception {
+        webServer = getWebServerWithInput(allPossibleInputs());
         webServer.readFromSocket();
 
         BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
@@ -116,6 +116,17 @@ public class WebServerTest {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
                 .thenReturn(Commands.REQUEST_AVAILABLE_HTML_FILES)
+                .thenReturn(Commands.END_CONNECTION);
+
+        return mockBufferedReader;
+    }
+
+    private BufferedReader allPossibleInputs() throws IOException {
+        BufferedReader mockBufferedReader = mock(BufferedReader.class);
+        when(mockBufferedReader.readLine())
+                .thenReturn("First random message")
+                .thenReturn(Commands.REQUEST_AVAILABLE_HTML_FILES)
+                .thenReturn("Second random message")
                 .thenReturn(Commands.END_CONNECTION);
 
         return mockBufferedReader;
