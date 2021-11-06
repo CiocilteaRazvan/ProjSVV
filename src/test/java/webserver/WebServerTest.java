@@ -3,7 +3,7 @@ package webserver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utils.Commands;
-import utils.MocksContainer;
+import utils.MockContainer;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -17,11 +17,11 @@ public class WebServerTest {
     @DisplayName("The web server receives two lines then the 'end' command which are printed. After this, the web server closes itself")
     @Test
     void testWebServerReadWriteClose() throws Exception {
-        MocksContainer mocksContainer = getNewServerMocksContainer();
+        MockContainer mockContainer = getNewServerMockContainer();
         Socket mockSocket = getMockSocket();
         BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockSocketOut();
-        webServer = getStubbedWebServer(mocksContainer);
+        webServer = getStubbedWebServer(mockContainer);
 
         webServer.start();
 
@@ -52,32 +52,32 @@ public class WebServerTest {
         return mockBufferedReader;
     }
 
-    private MocksContainer getNewServerMocksContainer() throws Exception {
+    private MockContainer getNewServerMockContainer() throws Exception {
         Socket mockSocket = getMockSocket();
         BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockSocketOut();
 
-        return new MocksContainer(
+        return new MockContainer(
                 mockSocket,
                 mockSocketIn,
                 mockSocketOut);
     }
 
-    private WebServer getStubbedWebServer(MocksContainer mocksContainer) {
-        return new WebServer(9999) {
+    private WebServer getStubbedWebServer(MockContainer mockContainer) {
+        return new WebServer(10008) {
             @Override
             protected Socket getSocket (ServerSocket serverSocket) throws IOException {
-                return mocksContainer.getMockSocket();
+                return mockContainer.getMockSocket();
             }
 
             @Override
             protected BufferedReader getInStream() throws IOException {
-                return mocksContainer.getMockSocketIn();
+                return mockContainer.getMockSocketIn();
             }
 
             @Override
             protected PrintWriter getOutStream() throws IOException {
-                return mocksContainer.getMockSocketOut();
+                return mockContainer.getMockSocketOut();
             }
         };
     }
