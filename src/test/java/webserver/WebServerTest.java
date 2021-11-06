@@ -19,7 +19,21 @@ public class WebServerTest {
         Socket mockSocket = getMockSocket();
         BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockSocketOut();
-        webServer = new WebServer(9999) {
+        webServer = getStubbedWebServer(mockSocket, mockSocketIn, mockSocketOut);
+
+        webServer.start();
+
+        verify(mockSocketIn, times(3)).readLine();
+        verify(mockSocketOut).println("First message");
+        verify(mockSocketOut).println("Second message");
+        verify(mockSocketOut).println(Commands.END_MESSAGE);
+        verify(mockSocketIn, times(1)).close();
+        verify(mockSocketOut, times(1)).close();
+        verify(mockSocket, times(1)).close();
+    }
+
+    private WebServer getStubbedWebServer(Socket mockSocket, BufferedReader mockSocketIn, PrintWriter mockSocketOut) {
+        return new WebServer(9999) {
             @Override
             protected Socket getSocket (ServerSocket serverSocket) throws IOException {
                 return mockSocket;
@@ -35,16 +49,6 @@ public class WebServerTest {
                 return mockSocketOut;
             }
         };
-
-        webServer.start();
-
-        verify(mockSocketIn, times(3)).readLine();
-        verify(mockSocketOut).println("First message");
-        verify(mockSocketOut).println("Second message");
-        verify(mockSocketOut).println(Commands.END_MESSAGE);
-        verify(mockSocketIn, times(1)).close();
-        verify(mockSocketOut, times(1)).close();
-        verify(mockSocket, times(1)).close();
     }
 
     private Socket getMockSocket() throws IOException {
