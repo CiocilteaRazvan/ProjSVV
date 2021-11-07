@@ -39,8 +39,10 @@ public class WebClient {
             switch(inputLine) {
                 case Commands.REQUEST_AVAILABLE_HTML_FILES:
                     askForAvailableHtmlPages();
+                    break;
                 case Commands.END_CONNECTION:
                     endConnection = true;
+                    break;
                 default:
                     userOut.println("Command not known");
             }
@@ -50,19 +52,19 @@ public class WebClient {
         }
     }
 
+    protected void askForAvailableHtmlPages() throws IOException{
+        socketOut.println(Commands.REQUEST_AVAILABLE_HTML_FILES);
+        userOut.println(readFromSocket());
+    }
+
     protected String readFromSocket() throws IOException {
         String response = "";
         String line;
         if ((line = socketIn.readLine()) != null) {
-            response += line + "\n";
+            response += line;
         }
 
         return response;
-    }
-
-    protected void askForAvailableHtmlPages() throws IOException{
-        socketOut.println(Commands.REQUEST_AVAILABLE_HTML_FILES);
-        userOut.println(readFromSocket());
     }
 
     protected void close() throws IOException{

@@ -1,6 +1,5 @@
 package webclient;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -19,15 +18,10 @@ public class WebClientTest {
     private ClientMockContainer mockContainer;
     private WebClient webClient;
 
-    @BeforeEach
-    void init() throws Exception{
-        mockContainer = getNewClientMockContainer();
-        webClient = getStubbedWebClient(mockContainer);
-    }
-
     @DisplayName("Test that the start method closes all required resources when finished")
     @Test
     void testStart() throws Exception {
+        webClient = getClientWithInputAndResponse(noInput(), noResponse());
         webClient.start();
 
         Socket mockSocket = mockContainer.getMockSocket();
@@ -46,6 +40,7 @@ public class WebClientTest {
     @DisplayName("Tests if close() method closes all required resources")
     @Test
     void testClose() throws Exception{
+        webClient = getClientWithInputAndResponse(noInput(), noResponse());
         webClient.close();
 
         Socket mockSocket = mockContainer.getMockSocket();
@@ -64,28 +59,29 @@ public class WebClientTest {
     @DisplayName("Test if writeUserToSocket() prints 'Command not known' when unknown command in inputted")
     @Test
     void testWriteUserToSocketRandomMessages() throws Exception {
+        webClient = getClientWithInputAndResponse(twoRandomMessages(), noResponse());
         webClient.writeUserToSocket();
 
         PrintWriter mockUserOut = mockContainer.getMockUserOut();
 
         InOrder inOrder = inOrder(mockUserOut);
-        inOrder.verify(mockUserOut).println("Command not known");
-        inOrder.verify(mockUserOut).println("Command not known");
-        inOrder.verify(mockUserOut).println(Commands.END_CONNECTION);
+        inOrder.verify(mockUserOut, times(2)).println("Command not known");
     }
 
     @DisplayName("Test if readFromSocket() returns response from socketIn")
     @Test
     void testReadFromSocket() throws Exception {
+        webClient = getClientWithInputAndResponse(getAvailableHtmlFiles(), availableHtmlFiles());
         String response = webClient.readFromSocket();
 
-        String expected = "a.html;\n";
+        String expected = "a.html;";
         assertEquals(expected, response);
     }
 
     @DisplayName("Test if askForHtmlPages() sends correct command to socket and prints response to userOut")
     @Test
-    void testAskForAvailableHtmlPages() throws Exception{
+    void testAskForAvailableHtmlFiles() throws Exception{
+        webClient = getClientWithInputAndResponse(getAvailableHtmlFiles(), availableHtmlFiles());
         webClient.askForAvailableHtmlPages();
 
         PrintWriter socketOut = mockContainer.getMockSocketOut();
@@ -101,25 +97,52 @@ public class WebClientTest {
 
 
 
+    private WebClient getClientWithInputAndResponse(BufferedReader mockUserIn, BufferedReader mockSocketIn) throws Exception{
+        mockContainer = getNewClientMockContainer(mockUserIn, mockSocketIn);
+        return getStubbedWebClient(mockContainer);
+    }
+
     private PrintWriter getMockOutStream() {
         return mock(PrintWriter.class);
     }
 
-    private BufferedReader getMockUserIn() throws IOException {
+    private BufferedReader noInput() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
-                .thenReturn("First Message")
-                .thenReturn("Second Message")
                 .thenReturn(Commands.END_CONNECTION);
 
         return mockBufferedReader;
     }
 
-    private BufferedReader getMockSocketIn() throws IOException {
+    private BufferedReader getAvailableHtmlFiles() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
-                .thenReturn("a.html;")
+                .thenReturn(Commands.REQUEST_AVAILABLE_HTML_FILES)
                 .thenReturn(Commands.END_CONNECTION);
+
+        return mockBufferedReader;
+    }
+
+    private BufferedReader twoRandomMessages() throws IOException {
+        BufferedReader mockBufferedReader = mock(BufferedReader.class);
+        when(mockBufferedReader.readLine())
+                .thenReturn("First random message")
+                .thenReturn("Second random message")
+                .thenReturn(Commands.END_CONNECTION);
+
+        return mockBufferedReader;
+    }
+
+    private BufferedReader availableHtmlFiles() throws IOException {
+        BufferedReader mockBufferedReader = mock(BufferedReader.class);
+        when(mockBufferedReader.readLine())
+                .thenReturn("a.html;");
+
+        return mockBufferedReader;
+    }
+
+    private BufferedReader noResponse() {
+        BufferedReader mockBufferedReader = mock(BufferedReader.class);
 
         return mockBufferedReader;
     }
@@ -128,11 +151,9 @@ public class WebClientTest {
         return mock(Socket.class);
     }
 
-    private ClientMockContainer getNewClientMockContainer() throws IOException {
+    private ClientMockContainer getNewClientMockContainer(BufferedReader mockUserIn, BufferedReader mockSocketIn) throws IOException {
         Socket mockSocket = getMockSocket();
-        BufferedReader mockUserIn = getMockUserIn();
         PrintWriter mockUserOut = getMockOutStream();
-        BufferedReader mockSocketIn = getMockSocketIn();
         PrintWriter mockSocketOut = getMockOutStream();
 
         return new ClientMockContainer(
