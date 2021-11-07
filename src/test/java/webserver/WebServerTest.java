@@ -60,7 +60,6 @@ public class WebServerTest {
         webServer = getWebServerWithInput(allPossibleInputs());
         webServer.readFromSocket();
 
-        BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
         PrintWriter mockLogOut = mockContainer.getMockLogOut();
 
         InOrder inOrder = inOrder(mockLogOut);

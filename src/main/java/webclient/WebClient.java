@@ -36,6 +36,7 @@ public class WebClient {
         boolean endConnection = false;
         String inputLine;
         while ((inputLine = userIn.readLine()) != null) {
+
             switch(inputLine) {
                 case Commands.REQUEST_AVAILABLE_HTML_FILES:
                     askForAvailableHtmlPages();

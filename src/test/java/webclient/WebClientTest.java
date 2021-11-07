@@ -64,8 +64,7 @@ public class WebClientTest {
 
         PrintWriter mockUserOut = mockContainer.getMockUserOut();
 
-        InOrder inOrder = inOrder(mockUserOut);
-        inOrder.verify(mockUserOut, times(2)).println("Command not known");
+        verify(mockUserOut, times(2)).println("Command not known");
     }
 
     @DisplayName("Test if readFromSocket() returns response from socketIn")
@@ -89,6 +88,16 @@ public class WebClientTest {
         InOrder inOrder = inOrder(socketOut, mockUserOut);
         inOrder.verify(socketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
         inOrder.verify(mockUserOut).println("a.html;");
+    }
+
+    @DisplayName("Test if disconnect() method sends END_CONNECTION command to socketOut")
+    @Test
+    void testDisconnect() throws Exception{
+        webClient = getClientWithInputAndResponse(noInput(), noResponse());
+        webClient.disconnect();
+
+        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+        verify(mockSocketOut).println(Commands.END_CONNECTION);
     }
 
 
