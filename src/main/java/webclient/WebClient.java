@@ -41,6 +41,7 @@ public class WebClient {
                     askForAvailableHtmlPages();
                     break;
                 case Commands.END_CONNECTION:
+                    disconnect();
                     endConnection = true;
                     break;
                 default:
@@ -55,6 +56,10 @@ public class WebClient {
     protected void askForAvailableHtmlPages() throws IOException{
         socketOut.println(Commands.REQUEST_AVAILABLE_HTML_FILES);
         userOut.println(readFromSocket());
+    }
+
+    protected void disconnect() {
+        socketOut.println(Commands.END_CONNECTION);
     }
 
     protected String readFromSocket() throws IOException {
