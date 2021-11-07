@@ -1,20 +1,24 @@
 package webserver;
 
+import utils.Commands;
+
 import java.net.*;
 import java.io.*;
 
 public class WebServer{
+	private ServerSocket serverSocket;
 	private Socket socket;
-	private BufferedReader in;
-	private PrintWriter out;
+	private BufferedReader socketIn;
+	private PrintWriter socketOut;
+	private PrintWriter logOut;
 
 	public WebServer(int portNumber) {
 		try {
-			ServerSocket serverSocket = getServerSocket(portNumber);
+			this.serverSocket = getServerSocket(portNumber);
 			this.socket = getSocket(serverSocket);
-
-			in = getInStream();
-			out = getOutStream();
+			this.socketIn = getInStream();
+			this.socketOut = getOutStreamSocket();
+			this.logOut = getOutStreamLog();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -25,33 +29,56 @@ public class WebServer{
 		close();
 	}
 
-	private void readFromSocket() throws IOException {
+	protected void readFromSocket() throws IOException {
 		String inputLine;
-		while ((inputLine = in.readLine()) != null) {
-			System.out.println("Server: " + inputLine);
-			out.println(inputLine);
+		while ((inputLine = socketIn.readLine()) != null) {
+			boolean endConnection = false;
+			logOut.println("Input: " + inputLine);
 
-			if (inputLine.trim().equals("end"))
+			switch(inputLine){
+				case Commands.REQUEST_AVAILABLE_HTML_FILES:
+					socketOut.println(getAvailableHtmlFiles());
+					break;
+
+				case Commands.END_CONNECTION:
+					endConnection = true;
+					break;
+
+				default:
+					socketOut.println(inputLine);
+			}
+
+			if(endConnection)
 				break;
 		}
 	}
 
-	private void close() throws IOException{
-		out.close();
-		in.close();
+	private String getAvailableHtmlFiles() {
+		return "a.html;";
+	}
+
+	protected void close() throws IOException{
+		socketOut.close();
+		socketIn.close();
+		logOut.close();
 		socket.close();
+		serverSocket.close();
 	}
 
 	protected Socket getSocket(ServerSocket serverSocket) throws IOException {
 		return serverSocket.accept();
 	}
 
-	protected PrintWriter getOutStream() throws IOException {
+	protected BufferedReader getInStream() throws IOException {
+		return new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	}
+
+	protected PrintWriter getOutStreamSocket() throws IOException {
 		return new PrintWriter(socket.getOutputStream(), true);
 	}
 
-	protected BufferedReader getInStream() throws IOException {
-		return new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	protected PrintWriter getOutStreamLog() {
+		return new PrintWriter(System.out, true);
 	}
 
 	protected ServerSocket getServerSocket(int portNumber) throws IOException {

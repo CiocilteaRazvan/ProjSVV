@@ -1,5 +1,7 @@
 package webclient;
 
+import utils.Commands;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,42 +10,87 @@ import java.net.Socket;
 
 public class WebClient {
     private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private BufferedReader socketIn;
+    private PrintWriter socketOut;
+    private BufferedReader userIn;
+    private PrintWriter userOut;
 
     public WebClient(String address, int portNumber) {
         try {
             socket = getSocket(address, portNumber);
-            in = getInStream();
-            out = getOutStream();
+            userIn = getInStreamUser();
+            userOut = getOutStreamUser();
+            socketIn = getInStreamSocket();
+            socketOut = getOutStream();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void start() throws IOException {
-        writeToSocket();
+        readFromUser();
         close();
     }
 
-    private void writeToSocket() throws IOException {
-        String line;
-        while ((line = in.readLine()) != null) {
-            out.println(line);
+    protected void readFromUser() throws IOException {
+        boolean endConnection = false;
+        String inputLine;
+        while ((inputLine = userIn.readLine()) != null) {
 
-            if (line.equals("end"))
+            switch(inputLine) {
+                case Commands.REQUEST_AVAILABLE_HTML_FILES:
+                    askForAvailableHtmlPages();
+                    break;
+                case Commands.END_CONNECTION:
+                    disconnect();
+                    endConnection = true;
+                    break;
+                default:
+                    userOut.println("Command not known");
+            }
+
+            if (endConnection)
                 break;
         }
     }
 
-    private void close() throws IOException{
-        in.close();
-        out.close();
+    protected void askForAvailableHtmlPages() throws IOException{
+        socketOut.println(Commands.REQUEST_AVAILABLE_HTML_FILES);
+        userOut.println(readFromSocket());
+    }
+
+    protected void disconnect() {
+        socketOut.println(Commands.END_CONNECTION);
+    }
+
+    protected String readFromSocket() throws IOException {
+        String response = "";
+        String line;
+        if ((line = socketIn.readLine()) != null) {
+            response += line;
+        }
+
+        return response;
+    }
+
+    protected void close() throws IOException{
+        userIn.close();
+        userOut.close();
+        socketIn.close();
+        socketOut.close();
         socket.close();
     }
 
-    protected BufferedReader getInStream() {
+    protected BufferedReader getInStreamUser() {
         return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    protected PrintWriter getOutStreamUser() {
+        return new PrintWriter(System.out, true);
+    }
+
+    protected BufferedReader getInStreamSocket() throws IOException {
+        return new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
     protected PrintWriter getOutStream() throws IOException {
