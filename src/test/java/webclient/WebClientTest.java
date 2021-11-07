@@ -58,9 +58,9 @@ public class WebClientTest {
 
     @DisplayName("Test if writeUserToSocket() prints 'Command not known' when unknown command in inputted")
     @Test
-    void testWriteUserToSocketRandomMessages() throws Exception {
+    void testReadFromUserRandomMessages() throws Exception {
         webClient = getClientWithInputAndResponse(twoRandomMessages(), noResponse());
-        webClient.writeUserToSocket();
+        webClient.readFromUser();
 
         PrintWriter mockUserOut = mockContainer.getMockUserOut();
 
@@ -69,9 +69,9 @@ public class WebClientTest {
 
     @DisplayName("Test if correct response is printed to userOut when userIn is REQUEST_AVAILABLE_HTML_FILES command")
     @Test
-    void testWriteUserToSocketGetAvailableHtmlFiles() throws Exception {
+    void testReadFromUserGetAvailableHtmlFiles() throws Exception {
         webClient = getClientWithInputAndResponse(getAvailableHtmlFiles(), availableHtmlFiles());
-        webClient.writeUserToSocket();
+        webClient.readFromUser();
 
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
         PrintWriter mockUserOut = mockContainer.getMockUserOut();
@@ -83,9 +83,9 @@ public class WebClientTest {
 
     @DisplayName("Test that when user inputs disconnect command, the command is delivered to the server")
     @Test
-    void testWriteUserToSocketDisconnect() throws Exception {
+    void testReadFromUserDisconnect() throws Exception {
         webClient = getClientWithInputAndResponse(disconnect(), noResponse());
-        webClient.writeUserToSocket();
+        webClient.readFromUser();
 
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
         verify(mockSocketOut).println(Commands.END_CONNECTION);

@@ -28,11 +28,11 @@ public class WebClient {
     }
 
     public void start() throws IOException {
-        writeUserToSocket();
+        readFromUser();
         close();
     }
 
-    protected void writeUserToSocket() throws IOException {
+    protected void readFromUser() throws IOException {
         boolean endConnection = false;
         String inputLine;
         while ((inputLine = userIn.readLine()) != null) {
