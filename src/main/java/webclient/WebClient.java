@@ -29,27 +29,26 @@ public class WebClient {
 
     public void start() throws IOException {
         writeUserToSocket();
-        writeSocketToUser();
         close();
     }
 
     protected void writeUserToSocket() throws IOException {
+        String response;
         String line;
         while ((line = userIn.readLine()) != null) {
             socketOut.println(line);
+            response = readFromSocket();
 
+            userOut.println(response);
             if (line.equals(Commands.END_CONNECTION))
                 break;
         }
     }
 
-    protected String writeSocketToUser() throws IOException {
+    protected String readFromSocket() throws IOException {
         String response = "";
         String line;
-        while ((line = socketIn.readLine()) != null) {
-            userOut.println(line);
-            if (line.equals(Commands.END_CONNECTION))
-                break;
+        if ((line = socketIn.readLine()) != null) {
             response += line + "\n";
         }
 
@@ -74,7 +73,7 @@ public class WebClient {
     }
 
     protected PrintWriter getOutStreamUser() {
-        return new PrintWriter(System.out);
+        return new PrintWriter(System.out, true);
     }
 
     protected BufferedReader getInStreamSocket() throws IOException {

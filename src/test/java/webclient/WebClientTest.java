@@ -78,7 +78,7 @@ public class WebClientTest {
     @DisplayName("Test if readFromSocket() prints from socket input to user output and returns correct String")
     @Test
     void testWriteSocketToUser() throws Exception {
-        String response = webClient.writeSocketToUser();
+        String response = webClient.readFromSocket();
 
         String expected = "a.html;\n";
         assertEquals(expected, response);

@@ -43,6 +43,9 @@ public class WebServer{
 				case Commands.END_CONNECTION:
 					endConnection = true;
 					break;
+
+				default:
+					socketOut.println(inputLine);
 			}
 
 			if(endConnection)
@@ -75,7 +78,7 @@ public class WebServer{
 	}
 
 	protected PrintWriter getOutStreamLog() {
-		return new PrintWriter(System.out);
+		return new PrintWriter(System.out, true);
 	}
 
 	protected ServerSocket getServerSocket(int portNumber) throws IOException {
