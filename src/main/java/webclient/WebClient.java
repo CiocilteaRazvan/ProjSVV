@@ -33,14 +33,19 @@ public class WebClient {
     }
 
     protected void writeUserToSocket() throws IOException {
-        String response;
-        String line;
-        while ((line = userIn.readLine()) != null) {
-            socketOut.println(line);
-            response = readFromSocket();
+        boolean endConnection = false;
+        String inputLine;
+        while ((inputLine = userIn.readLine()) != null) {
+            switch(inputLine) {
+                case Commands.REQUEST_AVAILABLE_HTML_FILES:
+                    askForAvailableHtmlPages();
+                case Commands.END_CONNECTION:
+                    endConnection = true;
+                default:
+                    userOut.println("Command not known");
+            }
 
-            userOut.println(response);
-            if (line.equals(Commands.END_CONNECTION))
+            if (endConnection)
                 break;
         }
     }
@@ -55,9 +60,9 @@ public class WebClient {
         return response;
     }
 
-    protected void askForAvailableHtmlPages() {
+    protected void askForAvailableHtmlPages() throws IOException{
         socketOut.println(Commands.REQUEST_AVAILABLE_HTML_FILES);
-        socketOut.println(Commands.END_CONNECTION);
+        userOut.println(readFromSocket());
     }
 
     protected void close() throws IOException{

@@ -61,45 +61,38 @@ public class WebClientTest {
         verify(mockSocketIn).close();
     }
 
-    @DisplayName("Test if writeUserToSocket() prints from user input to socket output")
+    @DisplayName("Test if writeUserToSocket() prints 'Command not known' when unknown command in inputted")
     @Test
-    void testWriteUserToSocket() throws Exception {
+    void testWriteUserToSocketRandomMessages() throws Exception {
         webClient.writeUserToSocket();
 
-        BufferedReader mockUserIn = mockContainer.getMockUserIn();
-        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+        PrintWriter mockUserOut = mockContainer.getMockUserOut();
 
-        InOrder inOrder = inOrder(mockSocketOut);
-        inOrder.verify(mockSocketOut).println("First Message");
-        inOrder.verify(mockSocketOut).println("Second Message");
-        inOrder.verify(mockSocketOut).println(Commands.END_CONNECTION);
+        InOrder inOrder = inOrder(mockUserOut);
+        inOrder.verify(mockUserOut).println("Command not known");
+        inOrder.verify(mockUserOut).println("Command not known");
+        inOrder.verify(mockUserOut).println(Commands.END_CONNECTION);
     }
 
-    @DisplayName("Test if readFromSocket() prints from socket input to user output and returns correct String")
+    @DisplayName("Test if readFromSocket() returns response from socketIn")
     @Test
-    void testWriteSocketToUser() throws Exception {
+    void testReadFromSocket() throws Exception {
         String response = webClient.readFromSocket();
 
         String expected = "a.html;\n";
         assertEquals(expected, response);
-
-        BufferedReader socketIn = mockContainer.getMockSocketIn();
-        PrintWriter userOut = mockContainer.getMockUserOut();
-
-        InOrder inOrder = inOrder(userOut);
-        inOrder.verify(userOut).println("a.html;");
-        inOrder.verify(userOut).println(Commands.END_CONNECTION);
     }
 
-    @DisplayName("Test if askForHtmlPages() sends correct commands to socket")
+    @DisplayName("Test if askForHtmlPages() sends correct command to socket and prints response to userOut")
     @Test
-    void testAskForAvailableHtmlPages() {
+    void testAskForAvailableHtmlPages() throws Exception{
         webClient.askForAvailableHtmlPages();
 
         PrintWriter socketOut = mockContainer.getMockSocketOut();
-        InOrder inOrder = inOrder(socketOut);
+        PrintWriter mockUserOut = mockContainer.getMockUserOut();
+        InOrder inOrder = inOrder(socketOut, mockUserOut);
         inOrder.verify(socketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
-        inOrder.verify(socketOut).println(Commands.END_CONNECTION);
+        inOrder.verify(mockUserOut).println("a.html;");
     }
 
 
