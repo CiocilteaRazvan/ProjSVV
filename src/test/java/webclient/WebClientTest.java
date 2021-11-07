@@ -21,7 +21,7 @@ public class WebClientTest {
     @DisplayName("Test that the start method closes all required resources when finished")
     @Test
     void testStart() throws Exception {
-        webClient = getClientWithInputAndResponse(noInput(), noResponse());
+        webClient = getClientWithInputAndResponse(disconnect(), noResponse());
         webClient.start();
 
         Socket mockSocket = mockContainer.getMockSocket();
@@ -40,7 +40,7 @@ public class WebClientTest {
     @DisplayName("Tests if close() method closes all required resources")
     @Test
     void testClose() throws Exception{
-        webClient = getClientWithInputAndResponse(noInput(), noResponse());
+        webClient = getClientWithInputAndResponse(disconnect(), noResponse());
         webClient.close();
 
         Socket mockSocket = mockContainer.getMockSocket();
@@ -65,6 +65,30 @@ public class WebClientTest {
         PrintWriter mockUserOut = mockContainer.getMockUserOut();
 
         verify(mockUserOut, times(2)).println("Command not known");
+    }
+
+    @DisplayName("Test if correct response is printed to userOut when userIn is REQUEST_AVAILABLE_HTML_FILES command")
+    @Test
+    void testWriteUserToSocketGetAvailableHtmlFiles() throws Exception {
+        webClient = getClientWithInputAndResponse(getAvailableHtmlFiles(), availableHtmlFiles());
+        webClient.writeUserToSocket();
+
+        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+        PrintWriter mockUserOut = mockContainer.getMockUserOut();
+
+        InOrder inOrder = inOrder(mockSocketOut, mockUserOut);
+        inOrder.verify(mockSocketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
+        inOrder.verify(mockUserOut).println("a.html;");
+    }
+
+    @DisplayName("Test that when user inputs disconnect command, the command is delivered to the server")
+    @Test
+    void testWriteUserToSocketDisconnect() throws Exception {
+        webClient = getClientWithInputAndResponse(disconnect(), noResponse());
+        webClient.writeUserToSocket();
+
+        PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
+        verify(mockSocketOut).println(Commands.END_CONNECTION);
     }
 
     @DisplayName("Test if readFromSocket() returns response from socketIn")
@@ -93,7 +117,7 @@ public class WebClientTest {
     @DisplayName("Test if disconnect() method sends END_CONNECTION command to socketOut")
     @Test
     void testDisconnect() throws Exception{
-        webClient = getClientWithInputAndResponse(noInput(), noResponse());
+        webClient = getClientWithInputAndResponse(disconnect(), noResponse());
         webClient.disconnect();
 
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
@@ -115,7 +139,7 @@ public class WebClientTest {
         return mock(PrintWriter.class);
     }
 
-    private BufferedReader noInput() throws IOException {
+    private BufferedReader disconnect() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
                 .thenReturn(Commands.END_CONNECTION);
