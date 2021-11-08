@@ -132,7 +132,7 @@ public class WebServerTest {
         return mockBufferedReader;
     }
 
-    private ServerMockContainer getServerMockContainerWithInput(BufferedReader mockSocketIn) throws IOException {
+    private ServerMockContainer getServerMockContainerWithInput(BufferedReader mockSocketIn) {
         ServerSocket mockServerSocket = getMockServerSocket();
         Socket mockSocket = getMockSocket();
         PrintWriter mockSocketOut = getMockOutStream();

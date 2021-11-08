@@ -175,16 +175,14 @@ public class WebClientTest {
     }
 
     private BufferedReader noResponse() {
-        BufferedReader mockBufferedReader = mock(BufferedReader.class);
-
-        return mockBufferedReader;
+        return mock(BufferedReader.class);
     }
 
     private Socket getMockSocket() {
         return mock(Socket.class);
     }
 
-    private ClientMockContainer getNewClientMockContainer(BufferedReader mockUserIn, BufferedReader mockSocketIn) throws IOException {
+    private ClientMockContainer getNewClientMockContainer(BufferedReader mockUserIn, BufferedReader mockSocketIn) {
         Socket mockSocket = getMockSocket();
         PrintWriter mockUserOut = getMockOutStream();
         PrintWriter mockSocketOut = getMockOutStream();
