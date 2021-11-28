@@ -28,11 +28,11 @@ Static Analysis:
 
 Dynamic Analysis:
 CPU:
-![alt text](DynamicAlanysisCPU.png)
+![alt text](DynamicAnalysisCPU.png)
 
 Memory:
-![alt text](DynamicAlanysisMemory.png)
+![alt text](DynamicAnalysisMemory.png)
 
 Thread Monitor:
 There were no issues with thread blocking so the thread monitor had an empty result
-![alt text](DynamicAlanysisMonitor.png)
+![alt text](DynamicAnalysisMonitor.png)
