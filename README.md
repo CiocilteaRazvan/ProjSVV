@@ -27,6 +27,7 @@ Static Analysis:
 
 
 Dynamic Analysis:
+
 CPU:
 ![alt text](DynamicAnalysisCPU.png)
 
