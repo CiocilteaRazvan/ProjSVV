@@ -24,3 +24,15 @@ Test Coverage:
 
 Static Analysis:
 ![alt text](StaticAnalysis.png)
+
+
+Dynamic Analysis:
+CPU:
+![alt text](DynamicAlanysisCPU.png)
+
+Memory:
+![alt text](DynamicAlanysisMemory.png)
+
+Thread Monitor:
+There were no issues with thread blocking so the thread monitor had an empty result
+![alt text](DynamicAlanysisMonitor.png)
