@@ -42,7 +42,6 @@ public class WebServerController implements Initializable {
 
         int port = Integer.parseInt(configPort.getText());
         webServer.open(port);
-        webServer.getCommand();
     }
 
     public void onClickOffButton(MouseEvent mouseEvent) {

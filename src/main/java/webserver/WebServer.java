@@ -44,22 +44,30 @@ public class WebServer{
 	}
 
 	public void getCommand() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					while (socket.isConnected()) {
-						respondToCommand(socketIn.readLine());
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.out.println("Error when reading from socket");
-					close();
-				}
+		try {
+			while (socket.isConnected()) {
+				respondToCommand(socketIn.readLine());
 			}
-		}).start();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Error when reading from socket");
+		}
+//		new Thread(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				try {
+//					while (socket.isConnected()) {
+//						respondToCommand(socketIn.readLine());
+//					}
+//
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//					System.out.println("Error when reading from socket");
+//				}
+//			}
+//		}).start();
 	}
 
 	private void respondToCommand(String command) {
@@ -73,22 +81,28 @@ public class WebServer{
 		}
 	}
 
-	public boolean open(int portNumber) {
-		try {
-			this.serverSocket = getServerSocket(portNumber);
-			this.socket = getSocket(serverSocket);
-			this.socketIn = getInStream();
-			this.socketOut = getOutStreamSocket();
-			this.logOut = getOutStreamLog();
+	public void open(int portNumber) {
+		new Thread(new Runnable() {
 
-			status = WEBSERVER_STATUS.RUNNING;
-			System.out.println("Opened server on port " + portNumber);
-			return true;
+			@Override
+			public void run() {
+				try {
+					serverSocket = getServerSocket(portNumber);
+					socket = getSocket(serverSocket);
+					socketIn = getInStream();
+					socketOut = getOutStreamSocket();
+					logOut = getOutStreamLog();
 
-		} catch (Exception e) {
-			System.out.println("Exception caught at open() in WebServer.java");
-			return false;
-		}
+					status = WEBSERVER_STATUS.RUNNING;
+					System.out.println("Opened server on port " + portNumber);
+
+					getCommand();
+
+				} catch (Exception e) {
+					System.out.println("Exception caught at open() in WebServer.java");
+				}
+			}
+		}).start();
 	}
 
 	public void close() {
