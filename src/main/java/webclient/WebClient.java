@@ -1,6 +1,7 @@
 package webclient;
 
 import utils.Commands;
+import utils.Constants.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,21 +16,40 @@ public class WebClient {
     private BufferedReader userIn;
     private PrintWriter userOut;
 
-    public WebClient(String address, int portNumber) {
+    public WebClient(String address, int portNumber){
+        setUserIO();
+        connectToSocket(address, portNumber);
+    }
+
+    public void connectToSocket(String address, int portNumber) {
         try {
+            System.out.println("Client connecting to socket");
             socket = getSocket(address, portNumber);
-            userIn = getInStreamUser();
-            userOut = getOutStreamUser();
-            socketIn = getInStreamSocket();
-            socketOut = getOutStream();
-        } catch (Exception e) {
+            setSocketIO();
+            System.out.println("Client connected to socket");
+        } catch (IOException e) {
+            System.out.println("Client could not connect to socket");
             e.printStackTrace();
         }
     }
 
-    public void start() throws IOException {
-        readFromUser();
-        close();
+    protected void setSocketIO() throws IOException {
+        socketIn = getInStreamSocket();
+        socketOut = getOutStream();
+    }
+
+    protected void setUserIO() {
+        userIn = getInStreamUser();
+        userOut = getOutStreamUser();
+    }
+
+    public void start() {
+        try {
+            readFromUser();
+            close();
+        } catch (IOException e) {
+            System.out.println("IO error in client");
+        }
     }
 
     protected void readFromUser() throws IOException {
@@ -54,8 +74,35 @@ public class WebClient {
         }
     }
 
+    public void sendCommand(String command) throws IOException{
+        userOut.println("Command given: " + command);
+        socketOut.println(command);
+        socketOut.flush();
+    }
+
+    public String readFromSocket() throws IOException {
+        String response = "";
+        String line;
+        System.out.println("Starting the read");
+        while (responseNotEnded(line = socketIn.readLine())) {
+            System.out.println("Reading line :" + line + ":");
+            response += line + "\n";
+        }
+
+        return response;
+    }
+
+    private boolean responseNotEnded(String response) {
+        System.out.println("Checking if response ended");
+        if(!response.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     protected void askForAvailableHtmlPages() throws IOException{
         socketOut.println(Commands.REQUEST_AVAILABLE_HTML_FILES);
+        System.out.println("Reading from socket");
         userOut.println(readFromSocket());
     }
 
@@ -63,19 +110,8 @@ public class WebClient {
         socketOut.println(Commands.END_CONNECTION);
     }
 
-    protected String readFromSocket() throws IOException {
-        String response = "";
-        String line;
-        if ((line = socketIn.readLine()) != null) {
-            response += line;
-        }
-
-        return response;
-    }
-
     protected void close() throws IOException{
-        userIn.close();
-        userOut.close();
+        userOut.flush();
         socketIn.close();
         socketOut.close();
         socket.close();

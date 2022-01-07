@@ -27,14 +27,12 @@ public class WebClientTest {
         Socket mockSocket = mockContainer.getMockSocket();
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
         PrintWriter mockUserOut = mockContainer.getMockUserOut();
-        BufferedReader mockUserIn = mockContainer.getMockUserIn();
         BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
 
         verify(mockSocket).close();
         verify(mockSocketOut).close();
         verify(mockSocketIn).close();
-        verify(mockUserOut).close();
-        verify(mockUserIn).close();
+        verify(mockUserOut).flush();
     }
 
     @DisplayName("Tests if close() method closes all required resources")
@@ -46,13 +44,11 @@ public class WebClientTest {
         Socket mockSocket = mockContainer.getMockSocket();
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
         PrintWriter mockUserOut = mockContainer.getMockUserOut();
-        BufferedReader mockUserIn = mockContainer.getMockUserIn();
         BufferedReader mockSocketIn = mockContainer.getMockSocketIn();
 
         verify(mockSocket).close();
         verify(mockSocketOut).close();
-        verify(mockUserIn).close();
-        verify(mockUserOut).close();
+        verify(mockUserOut).flush();
         verify(mockSocketIn).close();
     }
 
@@ -78,7 +74,7 @@ public class WebClientTest {
 
         InOrder inOrder = inOrder(mockSocketOut, mockUserOut);
         inOrder.verify(mockSocketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
-        inOrder.verify(mockUserOut).println("a.html;");
+        inOrder.verify(mockUserOut).println("a.html;\nb.html;\n");
     }
 
     @DisplayName("Test that when user inputs disconnect command, the command is delivered to the server")
@@ -97,7 +93,7 @@ public class WebClientTest {
         webClient = getClientWithInputAndResponse(getAvailableHtmlFiles(), availableHtmlFiles());
         String response = webClient.readFromSocket();
 
-        String expected = "a.html;";
+        String expected = "a.html;\nb.html;\n";
         assertEquals(expected, response);
     }
 
@@ -111,7 +107,7 @@ public class WebClientTest {
         PrintWriter mockUserOut = mockContainer.getMockUserOut();
         InOrder inOrder = inOrder(socketOut, mockUserOut);
         inOrder.verify(socketOut).println(Commands.REQUEST_AVAILABLE_HTML_FILES);
-        inOrder.verify(mockUserOut).println("a.html;");
+        inOrder.verify(mockUserOut).println("a.html;\nb.html;\n");
     }
 
     @DisplayName("Test if disconnect() method sends END_CONNECTION command to socketOut")
@@ -169,7 +165,9 @@ public class WebClientTest {
     private BufferedReader availableHtmlFiles() throws IOException {
         BufferedReader mockBufferedReader = mock(BufferedReader.class);
         when(mockBufferedReader.readLine())
-                .thenReturn("a.html;");
+                .thenReturn("a.html;")
+                .thenReturn("b.html;")
+                .thenReturn("");
 
         return mockBufferedReader;
     }

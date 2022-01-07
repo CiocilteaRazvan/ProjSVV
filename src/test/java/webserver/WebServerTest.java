@@ -32,7 +32,7 @@ public class WebServerTest {
         verify(mockSocket).close();
         verify(mockSocketIn).close();
         verify(mockSocketOut).close();
-        verify(mockLogOut).close();
+        verify(mockLogOut).flush();
     }
 
     @DisplayName("Test that the close() closes all required resources")
@@ -51,7 +51,7 @@ public class WebServerTest {
         verify(mockSocket).close();
         verify(mockSocketIn).close();
         verify(mockSocketOut).close();
-        verify(mockLogOut).close();
+        verify(mockLogOut).flush();
     }
 
     @DisplayName("Test that readFromSocket() prints all input into logger")
@@ -77,7 +77,7 @@ public class WebServerTest {
 
         PrintWriter mockSocketOut = mockContainer.getMockSocketOut();
 
-        verify(mockSocketOut).println("a.html;");
+        verify(mockSocketOut).println("a.html;\nb.html;\n");
     }
 
 
