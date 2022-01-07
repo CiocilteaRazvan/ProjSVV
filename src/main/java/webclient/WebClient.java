@@ -1,7 +1,8 @@
 package webclient;
 
+import controllers.WebClientController;
+import javafx.scene.control.ScrollPane;
 import utils.Commands;
-import utils.Constants.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -90,6 +91,26 @@ public class WebClient {
         }
 
         return response;
+    }
+
+    public void getResponse(ScrollPane responsePane) {
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try{
+                    while(socket.isConnected()) {
+                        String response = socketIn.readLine();
+                        if(!response.isEmpty()) {
+                            WebClientController.addLabel(response, responsePane);
+                        }
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    userOut.println("Error reading response from socket");
+                }
+            }
+        }).start();
     }
 
     private boolean responseNotEnded(String response) {

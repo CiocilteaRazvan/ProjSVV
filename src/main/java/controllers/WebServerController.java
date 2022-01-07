@@ -25,7 +25,6 @@ public class WebServerController implements Initializable {
     public TextField configRootFolder;
 
     WebServer webServer = new WebServer();
-    Thread serverThread= new Thread(new ServerRunner());
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -43,8 +42,7 @@ public class WebServerController implements Initializable {
 
         int port = Integer.parseInt(configPort.getText());
         webServer.open(port);
-        serverThread.start();
-
+        webServer.getCommand();
     }
 
     public void onClickOffButton(MouseEvent mouseEvent) {

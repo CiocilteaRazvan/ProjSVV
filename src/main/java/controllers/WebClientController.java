@@ -35,11 +35,14 @@ public class WebClientController implements Initializable {
 
     public void onClickConnectButton(MouseEvent mouseEvent) {
         webClient = new WebClient(serverAddress.getText(), Integer.parseInt(serverPort.getText()));
+        webClient.getResponse(responsePane);
     }
 
     public void onClickSendButton(MouseEvent mouseEvent) {
         try{
-            String response;
+            String command = commandField.getText();
+            WebClientController.addLabel("Command: " + command, responsePane);
+
             webClient.sendCommand(commandField.getText());
             commandField.clear();
 
@@ -50,7 +53,7 @@ public class WebClientController implements Initializable {
         }
     }
 
-    public static void addResponse(String response) {
-
+    public static void addLabel(String text, ScrollPane responsePane) {
+        System.out.println("Adding Label: " + text);
     }
 }

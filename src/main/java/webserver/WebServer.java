@@ -43,19 +43,43 @@ public class WebServer{
 		}
 	}
 
+	public void getCommand() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					while (socket.isConnected()) {
+						respondToCommand(socketIn.readLine());
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("Error when reading from socket");
+					close();
+				}
+			}
+		}).start();
+	}
+
+	private void respondToCommand(String command) {
+		switch(command){
+			case Commands.REQUEST_AVAILABLE_HTML_FILES:
+				socketOut.println(getAvailableHtmlFiles());
+				break;
+
+			default:
+				socketOut.println(command + " is not a recognized command");
+		}
+	}
+
 	public boolean open(int portNumber) {
 		try {
-			System.out.println("Opening server 1");
 			this.serverSocket = getServerSocket(portNumber);
-			System.out.println("Opening server 2");
 			this.socket = getSocket(serverSocket);
-			System.out.println("Opening server 3");
 			this.socketIn = getInStream();
-			System.out.println("Opening server 4");
 			this.socketOut = getOutStreamSocket();
-			System.out.println("Opening server 5");
 			this.logOut = getOutStreamLog();
-			System.out.println("Opening server 6");
 
 			status = WEBSERVER_STATUS.RUNNING;
 			System.out.println("Opened server on port " + portNumber);
