@@ -75,7 +75,9 @@ public class WebServer{
 			case Commands.REQUEST_AVAILABLE_HTML_FILES:
 				socketOut.println(getAvailableHtmlFiles());
 				break;
-
+			case Commands.GET_HTML_FILE:
+				socketOut.println("Command not implemented yet");
+				break;
 			default:
 				socketOut.println(command + " is not a recognized command");
 		}

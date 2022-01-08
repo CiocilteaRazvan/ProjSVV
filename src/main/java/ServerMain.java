@@ -3,7 +3,7 @@ import webclient.ClientRunner;
 import webserver.ServerRunner;
 
 public class ServerMain {
-    public static void main (String args[]) {
+    public static void serverMain (String args[]) {
         Thread serverApplication = new Thread(new ServerApplication());
         serverApplication.start();
     }

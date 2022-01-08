@@ -1,3 +1,4 @@
+import applications.ClientApplication;
 import utils.Config;
 import webclient.ClientRunner;
 import webclient.WebClient;
@@ -6,11 +7,13 @@ import webserver.WebServer;
 
 public class Main {
     public static void main(String args[]) {
-        Thread serverThread = new Thread(new ServerRunner());
-
-        Thread clientThread = new Thread(new ClientRunner());
-
-        serverThread.start();
-        clientThread.start();
+//        Thread serverThread = new Thread(new ServerRunner());
+//
+//        Thread clientThread = new Thread(new ClientRunner());
+//
+//        serverThread.start();
+//        clientThread.start();
+        Thread clientApplication = new Thread(new ClientApplication());
+        clientApplication.start();
     }
 }

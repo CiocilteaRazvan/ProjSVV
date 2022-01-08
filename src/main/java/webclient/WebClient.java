@@ -1,7 +1,7 @@
 package webclient;
 
 import controllers.WebClientController;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import utils.Commands;
 
 import java.io.BufferedReader;
@@ -30,7 +30,7 @@ public class WebClient {
             System.out.println("Client connected to socket");
         } catch (IOException e) {
             System.out.println("Client could not connect to socket");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -93,7 +93,7 @@ public class WebClient {
         return response;
     }
 
-    public void getResponse(ScrollPane responsePane) {
+    public void getResponse(VBox responseBox) {
         new Thread(new Runnable(){
             @Override
             public void run() {
@@ -101,12 +101,12 @@ public class WebClient {
                     while(socket.isConnected()) {
                         String response = socketIn.readLine();
                         if(!response.isEmpty()) {
-                            WebClientController.addLabel(response, responsePane);
+                            WebClientController.addGuiOutput(response, responseBox);
                         }
                     }
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     userOut.println("Error reading response from socket");
                 }
             }

@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
+//    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 group 'org.svv.project'
@@ -19,10 +19,10 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.+'
 }
 
-javafx {
-    version = "11.0.2"
-    modules = [ 'javafx.controls' , 'javafx.fxml']
-}
+//javafx {
+//    version = "11.0.2"
+//    modules = [ 'javafx.controls' , 'javafx.fxml']
+//}
 
 test {
     useJUnitPlatform()
